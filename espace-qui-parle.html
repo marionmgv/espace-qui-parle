@@ -1,0 +1,2482 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>L'espace qui parle — Atelier d'aménagement</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --vert:#1b6b46;      /* vert des fiches séquence */
+  --vert-fonce:#12492f;
+  --sauge:#b9d4c7;
+  --sauge-clair:#e3efe8;
+  --rose:#ef86ab;      /* étiquettes roses des fiches */
+  --rose-clair:#fbe3ec;
+  --papier:#fbfcfa;
+  --encre:#1d2a24;
+  --gris:#5d6b64;
+  --ok:#1b6b46;
+  --rayon:14px;
+  font-family:'Lexend', 'Segoe UI', Arial, sans-serif;
+  color:var(--encre);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papier);font-size:17px;line-height:1.5}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--rose);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------- En-tête : la façade et son store ---------- */
+header.facade{background:var(--vert);color:#fff;padding:18px 24px 0;position:relative}
+.facade-haut{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;justify-content:space-between;max-width:1280px;margin:0 auto;padding-bottom:18px}
+.facade h1{margin:0;font-size:1.55rem;font-weight:800;letter-spacing:-.01em}
+.facade .sous-titre{margin:2px 0 0;font-size:.95rem;opacity:.85}
+.equipe{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.92rem}
+.badge{background:rgba(255,255,255,.14);border-radius:999px;padding:5px 12px}
+.badge strong{font-weight:700}
+.actions-fichier{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:0;border-radius:10px;padding:10px 16px;font-weight:600;cursor:pointer;background:var(--sauge-clair);color:var(--vert-fonce)}
+.btn:hover{filter:brightness(.96)}
+.btn.clair{background:#fff;color:var(--vert-fonce)}
+.btn.rose{background:var(--rose);color:#3b0f20}
+.btn.plein{background:var(--vert);color:#fff}
+.btn.petit{padding:6px 12px;font-size:.9rem}
+.store{height:26px;background:
+  repeating-linear-gradient(90deg,var(--vert) 0 36px,#fff 36px 72px);
+  -webkit-mask:radial-gradient(18px at 18px 0,#000 98%,transparent) 0 0/36px 100% repeat-x;
+          mask:radial-gradient(18px at 18px 0,#000 98%,transparent) 0 0/36px 100% repeat-x;
+  position:absolute;left:0;right:0;bottom:-26px}
+.statut{font-size:.82rem;opacity:.85;min-height:1.2em}
+
+/* ---------- Onglets ---------- */
+nav.onglets{max-width:1280px;margin:44px auto 0;padding:0 24px;display:flex;gap:6px;flex-wrap:wrap}
+.onglet{border:2px solid var(--sauge);background:#fff;border-radius:12px 12px 0 0;padding:10px 14px;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;min-width:130px;text-align:left}
+.onglet .seance{font-size:.75rem;color:var(--gris)}
+.onglet .nom{font-weight:700}
+.onglet[aria-selected="true"]{background:var(--sauge);border-color:var(--sauge)}
+.onglet.verrou{opacity:.55;cursor:not-allowed}
+.onglet.verrou .nom::after{content:" 🔒"}
+
+main{max-width:1280px;margin:0 auto;padding:0 24px 60px}
+.page{border-top:4px solid var(--sauge);padding-top:24px;display:grid;grid-template-columns:280px 1fr;gap:28px;align-items:start}
+@media (max-width:900px){.page{grid-template-columns:1fr}}
+
+/* ---------- Mission du tuteur (colonne gauche) ---------- */
+.mission{background:var(--sauge-clair);border-radius:var(--rayon);padding:18px 18px 16px;position:sticky;top:12px}
+.etiquette{display:inline-block;background:var(--rose);color:#3b0f20;font-weight:700;border-radius:8px;padding:4px 12px;font-size:.95rem;margin:0 0 10px}
+.mission p{margin:0 0 10px}
+.mission ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.mission li label{display:flex;gap:10px;align-items:flex-start;cursor:pointer;background:#fff;border-radius:10px;padding:9px 10px}
+.mission li input{width:22px;height:22px;flex:none;margin:1px 0 0;accent-color:var(--vert)}
+.mission li.fait label{background:#d5e8dd;text-decoration:line-through;text-decoration-color:rgba(0,0,0,.35)}
+.ecouter{margin-top:12px}
+
+/* ---------- Contenu ---------- */
+h2{font-size:1.35rem;margin:0 0 12px;font-weight:800;color:var(--vert-fonce)}
+h3{font-size:1.08rem;margin:0 0 8px}
+.lettre{background:#fff;border:2px solid var(--sauge);border-radius:var(--rayon);padding:22px 26px;max-width:70ch}
+.lettre p{margin:0 0 12px}
+.lettre .signature{font-weight:700;color:var(--vert-fonce)}
+.champs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:18px 0;max-width:70ch}
+label.champ{display:flex;flex-direction:column;gap:6px;font-weight:600}
+input[type=text],textarea{border:2px solid var(--sauge);border-radius:10px;padding:10px 12px;background:#fff;width:100%}
+textarea{min-height:64px;resize:vertical}
+.roles{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:6px}
+.role{background:var(--rose-clair);border-radius:10px;padding:8px 12px}
+
+/* Enseignes */
+.enseignes{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-bottom:24px}
+.carte-enseigne{border:3px solid transparent;background:#fff;border-radius:var(--rayon);padding:16px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:6px;box-shadow:0 0 0 2px var(--sauge) inset}
+.carte-enseigne .pic{font-size:2rem;line-height:1}
+.carte-enseigne .n{font-weight:800;font-size:1.1rem}
+.carte-enseigne .s{font-size:.9rem;color:var(--gris)}
+.carte-enseigne[aria-pressed="true"]{border-color:var(--vert);background:var(--sauge-clair)}
+.brief{background:#fff;border-radius:var(--rayon);border:2px solid var(--sauge);padding:22px 24px}
+.brief header{display:flex;gap:14px;align-items:center;margin-bottom:12px}
+.brief header .pic{font-size:2.4rem}
+.brief .de{color:var(--gris);font-size:.92rem;margin:0}
+.brief-grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.bloc{background:var(--sauge-clair);border-radius:12px;padding:14px 16px}
+.bloc p{margin:0}
+.exigences{background:var(--rose-clair);border-radius:12px;padding:14px 16px;margin-top:16px}
+.exigences ul{margin:0;padding-left:20px}
+.exigences li{margin:4px 0}
+.note{font-size:.82rem;color:var(--gris);margin-top:14px}
+.vide{background:#fff;border:2px dashed var(--sauge);border-radius:var(--rayon);padding:24px;text-align:center;color:var(--gris)}
+
+/* Moodboard */
+.mood{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:22px;align-items:start}
+@media (max-width:1150px){.mood{grid-template-columns:1fr}}
+.cases{display:grid;gap:14px}
+.case{background:#fff;border:2px solid var(--sauge);border-radius:var(--rayon);padding:16px}
+.case.complete{border-color:var(--vert)}
+.case-tete{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.case-tete h3{margin:0}
+.coche{font-size:.85rem;font-weight:700;color:var(--gris)}
+.case.complete .coche{color:var(--ok)}
+.aide{font-size:.9rem;color:var(--gris);margin:0 0 10px}
+.puces{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.puce{border:2px solid var(--sauge);background:#fff;border-radius:999px;padding:6px 14px;cursor:pointer}
+.puce[aria-pressed="true"]{background:var(--vert);border-color:var(--vert);color:#fff}
+.pourquoi{margin-top:8px}
+.pourquoi span{font-size:.9rem;font-weight:600}
+.palette{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:10px}
+.couleur{display:flex;flex-direction:column;align-items:center;gap:4px}
+.couleur input[type=color]{width:58px;height:58px;border:2px solid var(--sauge);border-radius:12px;padding:3px;background:#fff;cursor:pointer}
+.couleur button{border:0;background:none;color:var(--gris);font-size:.8rem;cursor:pointer;text-decoration:underline}
+.produits{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:10px}
+.produit{border:2px dashed var(--sauge);border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:6px;align-items:stretch}
+.produit .img{aspect-ratio:1;border-radius:8px;background:var(--sauge-clair) center/cover no-repeat;display:flex;align-items:center;justify-content:center;color:var(--gris);font-size:.85rem;text-align:center;cursor:pointer}
+.produit input[type=text]{padding:6px 8px;font-size:.9rem}
+.produit .retirer{border:0;background:none;color:var(--gris);font-size:.8rem;cursor:pointer;text-decoration:underline}
+.mots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.piece{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.mini-piece{width:150px;height:96px;border-radius:10px;position:relative;overflow:hidden;border:2px solid var(--sauge)}
+.mini-piece .mur{position:absolute;inset:0 0 38% 0}
+.mini-piece .sol{position:absolute;inset:62% 0 0 0}
+
+/* Aperçu du moodboard */
+.apercu{position:sticky;top:12px;background:#fff;border-radius:var(--rayon);border:2px solid var(--sauge);padding:14px}
+.planche{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;background:var(--papier);border-radius:10px;padding:8px}
+.planche .titre{grid-column:1/-1;font-weight:800;font-size:1.05rem;color:var(--vert-fonce);display:flex;gap:8px;align-items:center}
+.planche .bande{grid-column:1/-1;display:flex;height:42px;border-radius:8px;overflow:hidden;background:var(--sauge-clair)}
+.planche .bande div{flex:1}
+.planche .im{aspect-ratio:1;border-radius:8px;background:var(--sauge-clair) center/cover no-repeat}
+.planche .etiq{grid-column:span 2;background:var(--sauge-clair);border-radius:8px;padding:6px 8px;font-size:.8rem}
+.planche .etiq b{display:block;font-size:.72rem;color:var(--gris);font-weight:600}
+.planche .motsap{grid-column:1/-1;text-align:center;font-weight:700;padding:6px;border-radius:8px;background:var(--rose-clair)}
+.progression{margin:12px 0 0;font-size:.9rem}
+.barre{height:10px;border-radius:99px;background:var(--sauge-clair);overflow:hidden;margin-top:6px}
+.barre div{height:100%;background:var(--vert);width:0;transition:width .3s}
+
+/* Plan du magasin */
+.page.large{grid-template-columns:1fr}
+.page.large .mission{position:static}
+.page.large .mission ol{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.atelier{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;align-items:start}
+@media (max-width:1150px){.atelier{grid-template-columns:1fr}}
+.modes{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.mode{border:2px solid var(--sauge);background:#fff;border-radius:10px;padding:8px 14px;font-weight:600;cursor:pointer}
+.mode[aria-pressed="true"]{background:var(--vert);border-color:var(--vert);color:#fff}
+.cadre-plan{background:#fff;border:2px solid var(--sauge);border-radius:var(--rayon);padding:10px}
+svg.plan{width:100%;height:auto;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+svg.plan:focus-visible{outline:3px solid var(--rose)}
+svg.plan .meuble{cursor:grab}
+svg.plan .meuble.sel rect.corps{stroke:var(--rose);stroke-width:.12}
+svg.plan text{font-family:'Lexend',Arial,sans-serif;pointer-events:none}
+.emplacement.cliquable{cursor:pointer}
+.emplacement.cliquable:hover rect.corps{fill:rgba(239,134,171,.5)}
+.emplacement.choisi rect.corps{stroke:#c2185b;stroke-width:.14}
+.emplacement:focus-visible{outline:none}
+.emplacement:focus-visible rect.corps{stroke:#1d2a24;stroke-width:.16}
+.question{font-size:1.15rem;color:var(--vert-fonce)}
+.exemple{background:var(--sauge-clair);border-radius:10px;padding:10px 12px;font-size:.92rem}
+.choix-emp{border:2px dashed var(--rose);border-radius:10px;padding:10px 12px;font-size:.95rem}
+.choix-emp.fait{border-style:solid;border-color:var(--vert);background:#d5e8dd}
+.regle{background:var(--rose-clair);border-radius:10px;padding:10px 12px}
+.regle .etiquette{margin-bottom:6px}
+.regle p{margin:0;font-size:.95rem}
+.regarder{font-size:.92rem}
+.regarder ul{margin:4px 0 0;padding-left:20px}
+.fiche{margin:6px 0 0;padding-left:18px;font-size:.88rem}
+.retour{border-radius:10px;padding:10px 12px;background:#fdf0d8;font-size:.93rem}
+.retour.ok{background:#d5e8dd}
+.canvas3d{width:100%;height:auto;display:block;border-radius:10px;cursor:grab;touch-action:none}
+.canvas3d:focus-visible{outline:3px solid var(--rose)}
+.raisons{display:grid;gap:6px}
+.raison{text-align:left;border:2px solid var(--sauge);background:#fff;border-radius:10px;padding:9px 12px;cursor:pointer;font-size:.93rem}
+.raison:hover{background:var(--sauge-clair)}
+.raison.juste{border-color:var(--vert);background:#d5e8dd;font-weight:600}
+.raison.fausse{border-color:#e0a02b;background:#fdf0d8;font-weight:600}
+.nav-etapes{justify-content:space-between}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.liste-etapes{margin:4px 0 0;padding:10px 0 0;border-top:2px solid var(--sauge-clair);list-style:none;display:grid;gap:2px;counter-reset:et}
+.liste-etapes li{counter-increment:et}
+.liste-etapes button{border:0;background:none;text-align:left;width:100%;padding:4px 6px;border-radius:8px;font-size:.88rem;cursor:pointer;color:var(--gris)}
+.liste-etapes button::before{content:counter(et)". "}
+.liste-etapes li.faite button{color:var(--vert-fonce)}
+.liste-etapes li.faite button::after{content:" ✔"}
+.liste-etapes li.courante button{background:var(--rose-clair);color:var(--encre);font-weight:700}
+.liste-etapes button:disabled{opacity:.5;cursor:default}
+.legende-plan{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.82rem;color:var(--gris);margin-top:8px}
+.legende-plan span{display:inline-flex;align-items:center;gap:5px}
+.pastille{width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:.65rem;font-weight:700}
+.panneau{background:#fff;border:2px solid var(--sauge);border-radius:var(--rayon);padding:14px;display:grid;gap:12px}
+.panneau h3{margin:0}
+.catalogue{display:grid;gap:6px}
+.catalogue button{display:flex;justify-content:space-between;align-items:center;gap:8px;text-align:left;border:2px solid var(--sauge);background:var(--papier);border-radius:10px;padding:7px 10px;cursor:pointer}
+.catalogue button:hover{background:var(--sauge-clair)}
+.catalogue small{color:var(--gris);white-space:nowrap}
+.catalogue .groupe{font-size:.82rem;color:var(--gris);margin:6px 0 0}
+.selection{background:var(--rose-clair);border-radius:12px;padding:12px;display:grid;gap:8px}
+.selection select{border:2px solid var(--sauge);border-radius:10px;padding:8px;background:#fff}
+.ligne-btn{display:flex;flex-wrap:wrap;gap:6px}
+.definitions{font-size:.82rem;color:var(--gris);margin:0;padding-left:18px}
+.verif{margin-top:18px;background:var(--sauge-clair);border-radius:var(--rayon);padding:16px 18px}
+.verif-tete{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.messages{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.messages li{background:#fff;border-radius:10px;padding:10px 12px;display:flex;gap:10px;align-items:flex-start}
+.messages li.ok{background:#d5e8dd}
+.messages .ic{flex:none;font-size:1.1rem;line-height:1.3}
+.score{font-weight:700}
+
+.travail-s5{display:grid;gap:14px}
+.apercu-svg{width:100%;height:auto;display:block}
+.apercu-svg.etiq{max-width:420px;margin:0 auto}
+.apercu-svg.affiche{max-width:300px;margin:0 auto}
+.coches{display:grid;gap:6px}
+.coches label{display:flex;gap:10px;align-items:flex-start;background:var(--papier);border:2px solid var(--sauge);border-radius:10px;padding:8px 10px;cursor:pointer}
+.coches input{width:20px;height:20px;accent-color:var(--vert);flex:none;margin-top:2px}
+.champs-ligne{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:10px}
+.tri{display:grid;gap:8px}
+.ligne-tri{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;background:var(--papier);border-radius:10px;padding:6px 10px}
+.ligne-tri .puces{margin:0}
+.messages.compact li{padding:7px 10px;font-size:.9rem}
+.apercu-svg.etiq{max-width:520px;margin:0 auto}
+.apercu-svg.gondole{max-width:760px;margin:0 auto}
+.zone-s5{cursor:pointer}
+.zone-s5:hover rect:first-child{fill:rgba(239,134,171,.45)}
+.produit-s5{cursor:pointer}
+.produit-s5:hover rect{filter:brightness(1.1)}
+.palette-s5{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.type-ILV,.type-PLV{display:inline-block;font-size:.72rem;font-weight:800;border-radius:6px;padding:1px 6px;color:#fff}
+.type-ILV{background:#2e6fa7}.type-PLV{background:#c2185b}
+.mode[aria-pressed="true"] .type-ILV,.mode[aria-pressed="true"] .type-PLV{outline:2px solid #fff}
+.note-direction{background:#fff8e1;border:2px solid #e8c35b;border-radius:12px;padding:12px 16px}
+.note-direction p{margin:6px 0 0}
+.fiche-anom{display:grid;gap:10px}
+.fiche-anom select{border:2px solid var(--sauge);border-radius:10px;padding:8px;background:#fff}
+.bilan-grille{display:grid;grid-template-columns:1fr 1.4fr;gap:12px;align-items:start}
+@media (max-width:900px){.bilan-grille{grid-template-columns:1fr}}
+.bilan-grille figure{margin:0;background:#fff;border:2px solid var(--sauge);border-radius:12px;padding:8px}
+.bilan-grille figcaption{text-align:center;font-weight:700;font-size:.9rem;margin-top:6px}
+.atelier-client{grid-template-columns:minmax(0,1fr) 340px}
+.carte-client{background:#fff;border:3px solid var(--rose);border-radius:14px;padding:16px;text-align:center;box-shadow:0 4px 0 var(--rose-clair)}
+.carte-client .pic{font-size:2.6rem;display:block}
+.carte-client p{margin:8px 0 0;font-size:1.12rem;font-weight:600}
+.consignes-client{margin:4px 0 0;padding-left:20px;font-size:.93rem}
+.score-client{font-size:1.4rem;font-weight:800;color:var(--vert-fonce);margin:0}
+.i-cartes{display:grid;grid-template-columns:1fr 1fr;gap:4mm;align-content:start}
+.i-carte{border:2px dashed #c2185b;border-radius:4mm;padding:4mm;text-align:center;font-size:10.5pt;font-weight:600}
+.i-carte span{font-size:18pt;display:block}
+.i-carte p{margin:2mm 0 0}
+#zoneImpression{display:none}
+#zoneImpression.rendu-pdf{display:block;position:fixed;left:-10000px;top:0;width:1123px;background:#fff}
+#zoneImpression.rendu-pdf .page-impr{width:1123px;min-height:760px;max-height:none;padding:20px;box-sizing:border-box;background:#fff}
+@page{size:A4 landscape;margin:8mm}
+@media print{
+  body.mode-impression > *:not(#zoneImpression){display:none!important}
+  body.mode-impression #zoneImpression{display:block}
+  body{background:#fff}
+}
+.page-impr{font-size:10pt;color:#1d2a24}
+.i-tete{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid #1b6b46;padding-bottom:4px;margin-bottom:6px}
+.i-tete h1{font-size:15pt;margin:0;color:#12492f}
+.i-tete p{margin:0;font-size:9pt}
+.i-corps{display:grid;grid-template-columns:1.25fr 1fr;gap:8mm}
+.plan-impr{width:100%;height:auto;max-height:100mm;display:block}
+.page-impr{page-break-inside:avoid;break-inside:avoid;max-height:190mm;overflow:hidden}
+.i-3d{width:auto;max-width:100%;height:62mm;object-fit:contain;display:block;margin:4px auto 0;border-radius:6px}
+.i-droite h2{font-size:11pt;margin:0 0 4px;color:#12492f;background:#fbe3ec;display:inline-block;padding:1px 8px;border-radius:5px}
+.i-droite section{margin-bottom:6px}
+.i-bande{display:flex;height:10mm;border-radius:4px;overflow:hidden;margin-bottom:4px}
+.i-bande span{flex:1}
+.i-produits{display:flex;gap:4px;margin-bottom:4px}
+.i-produits img{width:22mm;height:22mm;object-fit:cover;border-radius:4px}
+.i-grille{display:grid;grid-template-columns:1fr 1fr;gap:3px}
+.i-etiq{background:#e3efe8;border-radius:4px;padding:2px 5px;font-size:8.5pt}
+.i-etiq b{display:block;font-size:7pt;color:#5d6b64}
+.i-mots{font-weight:700;text-align:center;margin:4px 0}
+.i-just{font-style:italic;margin:0;font-size:9pt}
+.i-choix{margin:0;padding-left:14px;font-size:8.8pt}
+.i-choix li{margin-bottom:2px}
+.i-choix em{color:#12492f}
+/* Bientôt */
+.bientot{grid-column:1/-1;background:#fff;border:2px dashed var(--sauge);border-radius:var(--rayon);padding:32px;text-align:center}
+.bientot p{margin:6px 0;color:var(--gris)}
+
+/* Pied de page et espace enseignant */
+footer{max-width:1280px;margin:0 auto;padding:0 24px 28px;display:flex;justify-content:flex-end}
+footer .btn{background:none;color:var(--gris);text-decoration:underline;padding:4px}
+dialog{border:0;border-radius:var(--rayon);padding:22px;max-width:460px;width:92vw}
+dialog::backdrop{background:rgba(18,73,47,.45)}
+.bascules{display:grid;gap:8px;margin:12px 0}
+.bascules label{display:flex;justify-content:space-between;align-items:center;background:var(--sauge-clair);border-radius:10px;padding:8px 12px}
+.bascules input{width:22px;height:22px;accent-color:var(--vert)}
+.erreur{color:#9b1c3a;font-weight:600;min-height:1.3em}
+.cache{display:none!important}
+</style>
+</head>
+<body>
+
+<header class="facade">
+  <div class="facade-haut">
+    <div>
+      <h1>L'espace qui parle</h1>
+      <p class="sous-titre">Atelier d'aménagement — préparation du nouveau magasin</p>
+    </div>
+    <div class="equipe" id="equipe"></div>
+    <div>
+      <div class="actions-fichier">
+        <button class="btn clair" id="btnEnregistrer" type="button">Enregistrer mon fichier</button>
+        <button class="btn" id="btnOuvrir" type="button">Ouvrir un fichier</button>
+        <input type="file" id="fichierOuvrir" accept=".json,application/json" class="cache">
+      </div>
+      <div class="statut" id="statut" aria-live="polite"></div>
+    </div>
+  </div>
+  <div class="store" aria-hidden="true"></div>
+</header>
+
+<nav class="onglets" id="onglets" role="tablist" aria-label="Étapes du travail"></nav>
+<main id="contenu"></main>
+
+<footer><button class="btn" id="btnEnseignant" type="button">Espace enseignant</button></footer>
+<div id="zoneImpression"></div>
+
+<dialog id="dlgConfirmer">
+  <p id="confirmerTexte" style="margin:0 0 16px"></p>
+  <div class="actions-fichier">
+    <button class="btn plein" id="confirmerOui" type="button">Oui</button>
+    <button class="btn" id="confirmerNon" type="button">Annuler</button>
+  </div>
+</dialog>
+
+<dialog id="dlgEnseignant">
+  <div id="dlgCode">
+    <h2>Espace enseignant</h2>
+    <label class="champ">Code
+      <input type="text" id="codeSaisi" inputmode="numeric" autocomplete="off">
+    </label>
+    <p class="erreur" id="codeErreur" aria-live="polite"></p>
+    <div class="actions-fichier">
+      <button class="btn plein" id="btnValiderCode" type="button">Valider</button>
+      <button class="btn" data-fermer type="button">Fermer</button>
+    </div>
+  </div>
+  <div id="dlgBascules" class="cache">
+    <h2>Onglets ouverts aux élèves</h2>
+    <div class="bascules" id="bascules"></div>
+    <div class="actions-fichier">
+      <button class="btn rose" id="btnToutEffacer" type="button">Effacer le travail sur ce poste</button>
+      <button class="btn plein" data-fermer type="button">Terminé</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+/* =========================================================
+   DONNÉES
+   ========================================================= */
+const CODE_ENSEIGNANT = '0105';
+const CLE_STOCKAGE = 'espaceQuiParle_v1';
+
+const ONGLETS = [
+  {id:'accueil',   nom:'Accueil',                 seance:'Séance 2'},
+  {id:'enseigne',  nom:'Mon enseigne',            seance:'Séance 2'},
+  {id:'moodboard', nom:'Moodboard',               seance:'Séance 3'},
+  {id:'plan',      nom:'Plan du magasin',         seance:'Séance 4'},
+  {id:'vitrine',   nom:'Signalétique et prix',    seance:'Séance 5'},
+  {id:'client',    nom:'Client test et oral',     seance:'Séance 6'}
+];
+
+const MISSIONS = {
+  accueil:{
+    intro:"Bienvenue dans l'équipe. Avant de commencer, présentez-vous et organisez votre binôme.",
+    etapes:[
+      "Écrivez vos deux prénoms.",
+      "Décidez qui commence comme pilote (à la souris) et qui est copilote (lit et vérifie).",
+      "Lisez le message de votre tuteur en entier.",
+      "Passez à l'onglet « Mon enseigne »."
+    ]
+  },
+  enseigne:{
+    intro:"Aujourd'hui, j'ai besoin que vous sachiez exactement ce que notre enseigne attend du nouveau magasin.",
+    etapes:[
+      "Découvrez les quatre enseignes.",
+      "Choisissez celle où vous faites votre PFMP.",
+      "Lisez le brief en entier : identité, clients, univers, exigences.",
+      "Recopiez sur votre fichier les deux exigences qui vous paraissent les plus difficiles à respecter."
+    ]
+  },
+  plan:{
+    intro:"Le local de 300 m² est vide. Je vous guide étape par étape pour l'aménager selon notre concept.",
+    etapes:[
+      "Suivez les étapes à droite du plan : posez d'abord la caisse, puis choisissez un emplacement pour chaque famille de produits.",
+      "Pour chaque choix, cliquez sur la bonne raison.",
+      "Prévoyez vos zones chaudes et froides.",
+      "Vérifiez votre plan, lisez les questions et corrigez vos choix si besoin.",
+      "Enregistrez votre fichier sur votre espace personnel."
+    ]
+  },
+  vitrine:{
+    intro:"Le magasin est aménagé. Maintenant, l'affichage doit informer et guider le client, et il doit être exact.",
+    etapes:[
+      "Préparez une étiquette prix conforme.",
+      "Habillez un rayon avec l'ILV et la PLV.",
+      "Mettez à jour l'affichage demandé par la direction.",
+      "Contrôlez un rayon et signalez les anomalies.",
+      "Faites le bilan et enregistrez votre fichier."
+    ]
+  },
+  client:{
+    intro:"Dernière répétition avant l'ouverture : vos clients trouvent-ils leur chemin ? Ensuite, préparez votre présentation.",
+    etapes:[
+      "Un autre binôme joue les clients dans le magasin de référence de votre enseigne.",
+      "Pour chaque carte, cliquez où vous envoyez le client et répondez-lui avec une phrase complète.",
+      "Terminez les 6 cartes.",
+      "Imprimez la page de votre oral.",
+      "Enregistrez votre fichier sur votre espace personnel."
+    ]
+  },
+  moodboard:{
+    intro:"Avant de placer le moindre meuble, j'ai besoin de savoir quelle ambiance vous voulez créer.",
+    etapes:[
+      "Relisez les exigences de votre enseigne.",
+      "Remplissez chaque case du moodboard.",
+      "À la fin, expliquez en deux phrases pourquoi cette ambiance correspond à votre enseigne.",
+      "Vérifiez dans l'aperçu que le moodboard ressemble à votre enseigne.",
+      "Enregistrez votre fichier sur votre espace personnel."
+    ]
+  }
+};
+
+/* Briefs reconstitués à partir d'informations publiques sur chaque enseigne */
+const ENSEIGNES = {
+  nd:{
+    nom:'Nature & Découvertes', pic:'🌿', niveau:'Brief exigeant',
+    secteur:'Cadeaux, nature, bien-être, jeux, jardin, astronomie',
+    tuteur:'Claire Vernet', role:'responsable du magasin',
+    identite:"Depuis 1990, l'enseigne invite ses clients à se reconnecter à la nature. Le magasin se visite comme une promenade en forêt.",
+    cible:"Des familles, des adultes attentifs à la nature et au bien-être, des clients qui cherchent un cadeau.",
+    univers:"Un sous-bois : lumière tamisée, bois naturel, sons de la nature, odeur de cèdre dès l'entrée. Plusieurs univers : nature, jardin, plein air, astronomie, bien-être.",
+    exigences:[
+      "Les cinq sens doivent être sollicités dans le magasin.",
+      "Le client doit pouvoir toucher, sentir et essayer les produits.",
+      "Chaque univers doit être facile à repérer.",
+      "L'odeur et le son doivent se percevoir dès l'entrée."
+    ]
+  },
+  normal:{
+    nom:'Normal', pic:'⭐', niveau:'Brief accessible',
+    secteur:'Hygiène, beauté, entretien, confiserie, petite déco',
+    tuteur:'Mathis Roux', role:'responsable du magasin',
+    identite:"Enseigne danoise arrivée en France en 2019. Sa promesse : des produits de grandes marques à petits prix, tous les jours.",
+    cible:"Tous les publics, en particulier les jeunes et les clients attentifs à leur budget.",
+    univers:"Un magasin coloré et joyeux : étals colorés, panneaux humoristiques, éclairage chaud.",
+    exigences:[
+      "Le client suit un parcours imposé, comme dans un labyrinthe : il passe devant tous les rayons avant d'arriver à la caisse.",
+      "Pas de promotions ni de carte de fidélité : le prix bas est le même toute l'année et doit se voir.",
+      "Les « trouvailles » sont placées à hauteur de main.",
+      "Le magasin reste lisible malgré les couleurs."
+    ]
+  },
+  city:{
+    nom:'Carrefour City', pic:'🥖', niveau:'Brief accessible',
+    secteur:'Alimentation de proximité, snacking, services du quotidien',
+    tuteur:'Samia Benali', role:'directrice du magasin',
+    identite:"Supérette de centre-ville du groupe Carrefour. Elle veut être le commerce indispensable du quartier.",
+    cible:"Les habitants du quartier, les actifs pressés, les étudiants.",
+    univers:"Un magasin clair et aéré : bois clair, vert mousse, gondoles basses, plafond dégagé.",
+    exigences:[
+      "Le frais et le snacking (boulangerie, fruits et légumes) sont vus dès l'entrée.",
+      "Un client pressé trouve très vite les produits de première nécessité.",
+      "Les services (retrait de colis, café, consigne) sont regroupés au même endroit.",
+      "Le magasin doit paraître aéré."
+    ]
+  },
+  mdm:{
+    nom:'Maisons du Monde', pic:'🛋️', niveau:'Brief exigeant',
+    secteur:'Meubles et décoration',
+    tuteur:'Julien Faure', role:'responsable du magasin',
+    identite:"Enseigne française de meubles et de décoration. Sa promesse : inspirer, faire plaisir et conseiller.",
+    cible:"Des adultes qui aménagent ou décorent leur logement, des clients qui cherchent des idées ou un cadeau.",
+    univers:"Des pièces de maison mises en scène par style (scandinave, bohème, industriel…). Espace ouvert, tables basses au centre, meubles hauts sur les côtés.",
+    exigences:[
+      "Au moins une pièce de maison est mise en scène.",
+      "Depuis l'entrée, on voit jusqu'au fond du magasin.",
+      "La vitrine donne envie d'entrer.",
+      "Les ambiances changent avec les saisons."
+    ]
+  }
+};
+
+const MATIERES = ['Bois','Métal','Verre','Tissu','Végétal','Pierre','Plastique','Carton recyclé','Céramique'];
+const LUMIERES = ['Chaude','Froide','Tamisée','Vive','Naturelle'];
+const SONS = ['Musique douce','Musique pop','Sons de la nature','Radio','Musique du monde','Silence'];
+const ODEURS = ['Bois, cèdre','Fleurs','Pain chaud','Café','Linge propre','Aucune odeur particulière'];
+
+/* =========================================================
+   ÉTAT
+   ========================================================= */
+function etatVide(){
+  return {
+    version:1,
+    binome:{e1:'',e2:'',pilote:0},
+    enseigne:null,
+    missions:{},
+    ouverts:{accueil:true,enseigne:true,moodboard:false,plan:false,vitrine:false,client:false},
+    mood:{
+      couleurs:[], couleursPq:'',
+      matieres:[], matieresPq:'',
+      lumiere:'', lumierePq:'',
+      sons:[], sonAutre:'', sonsPq:'',
+      odeurs:[], odeurAutre:'', odeursPq:'',
+      produits:[{img:'',nom:''},{img:'',nom:''},{img:'',nom:''},{img:'',nom:''}], produitsPq:'',
+      mots:['','',''], motsPq:'',
+      sol:'#c9b79c', murs:'#f3efe6', stylePq:'', pqGlobal:''
+    },
+    plan:{choix:{}, caisse:null, chemin:[], zones:{}, etape:0, verifs:0},
+    client:{},
+    vitrine:{etape:0, pq:{}, etiq:{mentions:[], unite:''}, tri:[], rayon:{fronton:false, reglettes:[{},{},{},{}], sol:{g:'', d:''}}, maj:{nouveau:'', unite:'', rang:null, mentions:[]}, controle:{}},
+    maj:null
+  };
+}
+let etat = charger() || etatVide();
+let ongletActif = 'accueil';
+
+function charger(){
+  try{
+    const brut = localStorage.getItem(CLE_STOCKAGE);
+    if(!brut) return null;
+    return fusion(etatVide(), JSON.parse(brut));
+  }catch(e){ return null; }
+}
+function fusion(base, donnees){
+  if(!donnees || typeof donnees !== 'object') return base;
+  for(const k of Object.keys(base)){
+    if(donnees[k] === undefined) continue;
+    if(base[k] && typeof base[k] === 'object' && !Array.isArray(base[k])) base[k] = fusion(base[k], donnees[k]);
+    else base[k] = donnees[k];
+  }
+  return base;
+}
+let minuterie = null;
+function sauver(){
+  etat.maj = new Date().toISOString();
+  clearTimeout(minuterie);
+  minuterie = setTimeout(()=>{
+    try{
+      localStorage.setItem(CLE_STOCKAGE, JSON.stringify(etat));
+      statut("Enregistré automatiquement sur cet ordinateur. Pensez à enregistrer votre fichier en fin de séance.");
+    }catch(e){
+      statut("La sauvegarde automatique n'a pas fonctionné : enregistrez votre fichier maintenant.");
+    }
+  }, 400);
+}
+function statut(t){ document.getElementById('statut').textContent = t; }
+
+/* =========================================================
+   OUTILS
+   ========================================================= */
+const el = (tag, attrs={}, ...enfants) => {
+  const n = document.createElement(tag);
+  for(const [k,v] of Object.entries(attrs)){
+    if(k === 'class') n.className = v;
+    else if(k.startsWith('on')) n.addEventListener(k.slice(2), v);
+    else if(v === true) n.setAttribute(k,'');
+    else if(v !== false && v != null) n.setAttribute(k, v);
+  }
+  for(const e of enfants.flat()){ if(e == null) continue; n.append(e.nodeType ? e : document.createTextNode(e)); }
+  return n;
+};
+const prenoms = () => [etat.binome.e1.trim() || 'Élève 1', etat.binome.e2.trim() || 'Élève 2'];
+
+function parler(texte){
+  if(!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(texte);
+  u.lang = 'fr-FR'; u.rate = .95;
+  speechSynthesis.speak(u);
+}
+
+function redimensionner(fichier, max=520){
+  return new Promise((ok, ko)=>{
+    const lecteur = new FileReader();
+    lecteur.onerror = ko;
+    lecteur.onload = () => {
+      const img = new Image();
+      img.onerror = ko;
+      img.onload = () => {
+        const r = Math.min(1, max / Math.max(img.width, img.height));
+        const c = document.createElement('canvas');
+        c.width = Math.round(img.width*r); c.height = Math.round(img.height*r);
+        c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+        ok(c.toDataURL('image/jpeg', .82));
+      };
+      img.src = lecteur.result;
+    };
+    lecteur.readAsDataURL(fichier);
+  });
+}
+
+/* =========================================================
+   EN-TÊTE ET ONGLETS
+   ========================================================= */
+function rendreEquipe(){
+  const [a,b] = prenoms();
+  const pilote = etat.binome.pilote === 0 ? a : b;
+  const copilote = etat.binome.pilote === 0 ? b : a;
+  const z = document.getElementById('equipe');
+  z.replaceChildren(...[
+    etat.enseigne ? el('span',{class:'badge'}, ENSEIGNES[etat.enseigne].pic+' ', el('strong',{}, ENSEIGNES[etat.enseigne].nom)) : null,
+    el('span',{class:'badge'}, 'Pilote : ', el('strong',{}, pilote)),
+    el('span',{class:'badge'}, 'Copilote : ', el('strong',{}, copilote))
+  ].filter(Boolean));
+}
+
+function rendreOnglets(){
+  const nav = document.getElementById('onglets');
+  nav.replaceChildren(...ONGLETS.map(o=>{
+    const ouvert = etat.ouverts[o.id];
+    return el('button',{
+      class:'onglet'+(ouvert?'':' verrou'), role:'tab', type:'button',
+      'aria-selected': String(o.id===ongletActif), 'aria-disabled': String(!ouvert),
+      title: ouvert ? '' : "Cet onglet sera ouvert par votre enseignante.",
+      onclick:()=>{ if(!ouvert) return; ongletActif=o.id; rendre(); window.scrollTo({top:0}); }
+    }, el('span',{class:'seance'}, o.seance), el('span',{class:'nom'}, o.nom));
+  }));
+}
+
+function blocMission(id){
+  const m = MISSIONS[id];
+  const coches = etat.missions[id] || (etat.missions[id] = m.etapes.map(()=>false));
+  const texteLu = m.intro + ' ' + m.etapes.map((e,i)=>`Étape ${i+1} : ${e}`).join(' ');
+  return el('aside',{class:'mission','aria-label':'Mission du jour'},
+    el('span',{class:'etiquette'}, 'Mission du jour'),
+    el('p',{}, m.intro),
+    el('ol',{}, m.etapes.map((e,i)=>
+      el('li',{class: coches[i]?'fait':''},
+        el('label',{},
+          el('input',{type:'checkbox', checked:coches[i], onchange:ev=>{
+            coches[i]=ev.target.checked; ev.target.closest('li').classList.toggle('fait', coches[i]); sauver();
+          }}),
+          el('span',{}, e)
+        )
+      ))),
+    ('speechSynthesis' in window) ? el('button',{class:'btn ecouter', type:'button', onclick:()=>parler(texteLu)}, '🔊 Écouter la mission') : null
+  );
+}
+
+/* =========================================================
+   PAGES
+   ========================================================= */
+function pageAccueil(){
+  const [a,b] = prenoms();
+  const zoneRoles = el('div',{class:'roles'});
+  const majRoles = () => {
+    const [x,y] = prenoms();
+    zoneRoles.replaceChildren(
+      el('span',{class:'role'}, '🖱️ Pilote : ', el('strong',{}, etat.binome.pilote===0?x:y)),
+      el('span',{class:'role'}, '📋 Copilote : ', el('strong',{}, etat.binome.pilote===0?y:x)),
+      el('button',{class:'btn', type:'button', onclick:()=>{ etat.binome.pilote = 1-etat.binome.pilote; majRoles(); rendreEquipe(); sauver(); }}, 'Inverser les rôles')
+    );
+  };
+  majRoles();
+  const champ = (cle, libelle) => el('label',{class:'champ'}, libelle,
+    el('input',{type:'text', value:etat.binome[cle], maxlength:'30', oninput:ev=>{ etat.binome[cle]=ev.target.value; majRoles(); rendreEquipe(); sauver(); }}));
+
+  return el('section',{},
+    el('h2',{}, 'Votre binôme'),
+    el('div',{class:'champs'}, champ('e1','Prénom élève 1'), champ('e2','Prénom élève 2')),
+    zoneRoles,
+    el('p',{class:'note'}, "Le pilote tient la souris, le copilote lit les consignes et vérifie. Vous inversez les rôles à chaque séance."),
+    el('h2',{style:'margin-top:28px'}, 'Le message de votre tuteur'),
+    el('div',{class:'lettre'},
+      el('p',{}, 'Bonjour à vous deux,'),
+      el('p',{}, "Notre magasin déménage. Dans quelques semaines, nous quittons notre ancien local pour une cellule de 300 m² dans la galerie commerciale rénovée du centre-ville de Saint-Étienne. Quatre enseignes s'y installent, dans des locaux tous identiques."),
+      el('p',{}, "Je vous associe à la préparation du plan du nouveau magasin, et je vous accompagnerai à chaque étape. Le nouveau magasin devra respecter le concept de notre enseigne et corriger ce qui ne fonctionnait pas dans l'ancien."),
+      el('p',{}, "On commence par l'essentiel : relire ce que notre enseigne attend."),
+      el('p',{class:'signature'}, 'Votre tuteur ou tutrice')
+    )
+  );
+}
+
+function pageEnseigne(){
+  const cartes = el('div',{class:'enseignes', role:'group', 'aria-label':'Choix de l\u2019enseigne'},
+    Object.entries(ENSEIGNES).map(([id,e])=>
+      el('button',{class:'carte-enseigne', type:'button', 'aria-pressed':String(etat.enseigne===id), onclick:()=>choisirEnseigne(id)},
+        el('span',{class:'pic','aria-hidden':'true'}, e.pic),
+        el('span',{class:'n'}, e.nom),
+        el('span',{class:'s'}, e.secteur),
+        el('span',{class:'s'}, e.niveau)
+      )));
+  const e = etat.enseigne && ENSEIGNES[etat.enseigne];
+  const brief = !e ? el('div',{class:'vide'}, "Choisissez une enseigne pour afficher son brief.") :
+    el('article',{class:'brief'},
+      el('header',{},
+        el('span',{class:'pic','aria-hidden':'true'}, e.pic),
+        el('div',{}, el('h2',{style:'margin:0'}, 'Brief — '+e.nom), el('p',{class:'de'}, `Transmis par ${e.tuteur}, ${e.role}`))
+      ),
+      el('div',{class:'brief-grille'},
+        el('div',{class:'bloc'}, el('span',{class:'etiquette'}, 'Qui sommes-nous ?'), el('p',{}, e.identite)),
+        el('div',{class:'bloc'}, el('span',{class:'etiquette'}, 'Nos clients'), el('p',{}, e.cible)),
+        el('div',{class:'bloc'}, el('span',{class:'etiquette'}, 'Notre univers'), el('p',{}, e.univers))
+      ),
+      el('div',{class:'exigences'},
+        el('span',{class:'etiquette'}, 'Ce que le nouveau magasin doit respecter'),
+        el('ul',{}, e.exigences.map(x=>el('li',{},x)))
+      ),
+      ('speechSynthesis' in window) ? el('button',{class:'btn', style:'margin-top:14px', type:'button', onclick:()=>parler(
+        `Brief ${e.nom}. Qui sommes-nous ? ${e.identite} Nos clients : ${e.cible} Notre univers : ${e.univers} Ce que le nouveau magasin doit respecter : ${e.exigences.join(' ')}`
+      )}, '🔊 Écouter le brief') : null,
+      el('p',{class:'note'}, "Brief pédagogique reconstitué à partir d'informations publiques sur l'enseigne. La situation est fictive, l'enseigne est réelle.")
+    );
+  return el('section',{}, el('h2',{}, 'Choisissez votre enseigne'), cartes, brief);
+}
+
+function moodVide(){
+  const m = etat.mood;
+  return !(m.couleurs.length || m.matieres.length || m.lumiere || m.sons.length || m.odeurs.length ||
+           m.produits.some(p=>p.img||p.nom) || m.mots.some(Boolean));
+}
+function demander(texte, oui='Oui'){
+  const d = document.getElementById('dlgConfirmer');
+  document.getElementById('confirmerTexte').textContent = texte;
+  document.getElementById('confirmerOui').textContent = oui;
+  return new Promise(ok=>{
+    const fin = v => { d.close(); btnO.onclick = btnN.onclick = null; d.oncancel = null; ok(v); };
+    const btnO = document.getElementById('confirmerOui'), btnN = document.getElementById('confirmerNon');
+    btnO.onclick = ()=>fin(true); btnN.onclick = ()=>fin(false); d.oncancel = ev=>{ ev.preventDefault(); fin(false); };
+    d.showModal(); btnN.focus();
+  });
+}
+async function choisirEnseigne(id){
+  const planCommence = !!etat.plan.caisse || Object.values(etat.plan.choix||{}).some(c=>c && c.slot) || (etat.plan.chemin||[]).length;
+  if(etat.enseigne && etat.enseigne!==id && (!moodVide() || planCommence)){
+    if(!await demander("Vous avez déjà commencé à travailler pour "+ENSEIGNES[etat.enseigne].nom+". Changer d'enseigne ? Le moodboard sera gardé mais sera à revoir, et le plan repartira de zéro, car chaque enseigne a son propre agencement.", "Changer d'enseigne")) return;
+  }
+  if(etat.enseigne !== id){ etat.plan = etatVide().plan; etat.vitrine = etatVide().vitrine; etat.client = {}; }
+  etat.enseigne = id; sauver(); rendre();
+}
+
+/* ----- Moodboard ----- */
+const CASES = [
+  {id:'couleurs', titre:'Couleurs', aide:"Choisissez 3 à 5 couleurs pour votre magasin.", pq:'couleursPq',
+   rempli:m=>m.couleurs.length>=3},
+  {id:'matieres', titre:'Matières', aide:"Quelles matières le client voit-il et touche-t-il ?", pq:'matieresPq',
+   rempli:m=>m.matieres.length>=1},
+  {id:'lumiere', titre:'Lumière', aide:"Quel éclairage pour votre magasin ?", pq:'lumierePq',
+   rempli:m=>!!m.lumiere},
+  {id:'sons', titre:'Son', aide:"Qu'entend le client quand il entre ?", pq:'sonsPq',
+   rempli:m=>m.sons.length>=1||m.sonAutre.trim()},
+  {id:'odeurs', titre:'Odeur', aide:"Que sent le client dans le magasin ?", pq:'odeursPq',
+   rempli:m=>m.odeurs.length>=1||m.odeurAutre.trim()},
+  {id:'produits', titre:'Produits phares', aide:"Ajoutez 3 ou 4 photos de produits vendus dans votre enseigne.", pq:'produitsPq',
+   rempli:m=>m.produits.filter(p=>p.img).length>=3},
+  {id:'mots', titre:'Trois mots', aide:"Trois mots qui résument l'ambiance de votre magasin.", pq:'motsPq',
+   rempli:m=>m.mots.every(x=>x.trim())},
+  {id:'style', titre:'Sol et murs', aide:"Choisissez la couleur du sol et des murs.", pq:'stylePq',
+   rempli:m=>true}
+];
+const caseComplete = c => !!c.rempli(etat.mood);
+
+function puces(liste, tableau, unique){
+  return el('div',{class:'puces'}, liste.map(v=>
+    el('button',{class:'puce', type:'button', 'aria-pressed':String(unique ? tableau()===v : tableau().includes(v)), onclick:ev=>{
+      if(unique){ etat.mood.lumiere = etat.mood.lumiere===v ? '' : v; }
+      else{
+        const t = tableau(); const i = t.indexOf(v);
+        i>=0 ? t.splice(i,1) : t.push(v);
+      }
+      majCase(ev.target);
+      if(unique) ev.target.parentNode.querySelectorAll('.puce').forEach(b=>b.setAttribute('aria-pressed', String(etat.mood.lumiere===b.textContent)));
+      else ev.target.setAttribute('aria-pressed', String(tableau().includes(v)));
+    }}, v)));
+}
+
+function contenuCase(c){
+  const m = etat.mood;
+  switch(c.id){
+    case 'couleurs':{
+      const zone = el('div',{class:'palette'});
+      const dessiner = () => {
+        zone.replaceChildren(...[
+          ...m.couleurs.map((col,i)=>el('div',{class:'couleur'},
+            el('input',{type:'color', value:col, 'aria-label':'Couleur '+(i+1), oninput:ev=>{ m.couleurs[i]=ev.target.value; majCase(zone); }}),
+            el('button',{type:'button', onclick:()=>{ m.couleurs.splice(i,1); dessiner(); majCase(zone); }}, 'Retirer'))),
+          m.couleurs.length<5 ? el('button',{class:'btn', type:'button', onclick:()=>{ m.couleurs.push(['#b9d4c7','#1b6b46','#ef86ab','#c9b79c','#f3efe6'][m.couleurs.length%5]); dessiner(); majCase(zone); }}, '+ Ajouter une couleur') : null
+        ].filter(Boolean));
+      };
+      dessiner();
+      return zone;
+    }
+    case 'matieres': return puces(MATIERES, ()=>m.matieres, false);
+    case 'lumiere':  return puces(LUMIERES, ()=>m.lumiere, true);
+    case 'sons': return el('div',{}, puces(SONS, ()=>m.sons, false),
+      el('label',{class:'champ'}, 'Autre (précisez)', el('input',{type:'text', value:m.sonAutre, oninput:ev=>{ m.sonAutre=ev.target.value; majCase(ev.target); }})));
+    case 'odeurs': return el('div',{}, puces(ODEURS, ()=>m.odeurs, false),
+      el('label',{class:'champ'}, 'Autre (précisez)', el('input',{type:'text', value:m.odeurAutre, oninput:ev=>{ m.odeurAutre=ev.target.value; majCase(ev.target); }})));
+    case 'produits': return el('div',{class:'produits'}, m.produits.map((p,i)=>{
+      const entree = el('input',{type:'file', accept:'image/*', class:'cache', onchange:async ev=>{
+        const f = ev.target.files[0]; if(!f) return;
+        try{ p.img = await redimensionner(f); vignette.style.backgroundImage = `url(${p.img})`; vignette.textContent=''; majCase(vignette); }
+        catch(e){ statut("Cette image n'a pas pu être ouverte. Essayez une photo au format JPG ou PNG."); }
+        ev.target.value='';
+      }});
+      const vignette = el('div',{class:'img', role:'button', tabindex:'0', 'aria-label':'Ajouter une photo '+(i+1),
+        onclick:()=>entree.click(), onkeydown:ev=>{ if(ev.key==='Enter'||ev.key===' '){ev.preventDefault(); entree.click();} }},
+        p.img ? '' : '+ Ajouter une photo');
+      if(p.img) vignette.style.backgroundImage = `url(${p.img})`;
+      return el('div',{class:'produit'}, vignette, entree,
+        el('input',{type:'text', placeholder:'Nom du produit', value:p.nom, oninput:ev=>{ p.nom=ev.target.value; majCase(ev.target); }}),
+        el('button',{class:'retirer', type:'button', onclick:()=>{ p.img=''; p.nom=''; rendre(); }}, 'Retirer'));
+    }));
+    case 'mots': return el('div',{class:'mots'}, m.mots.map((x,i)=>
+      el('input',{type:'text', value:x, maxlength:'20', 'aria-label':'Mot '+(i+1), placeholder:'Mot '+(i+1), oninput:ev=>{ m.mots[i]=ev.target.value; majCase(ev.target); }})));
+    case 'style':{
+      const mur = el('div',{class:'mur'}); const sol = el('div',{class:'sol'});
+      const peindre = () => { mur.style.background = m.murs; sol.style.background = m.sol; };
+      peindre();
+      return el('div',{class:'piece'},
+        el('div',{class:'mini-piece','aria-hidden':'true'}, mur, sol),
+        el('label',{class:'champ'}, 'Murs', el('input',{type:'color', value:m.murs, oninput:ev=>{ m.murs=ev.target.value; peindre(); majCase(ev.target); }})),
+        el('label',{class:'champ'}, 'Sol', el('input',{type:'color', value:m.sol, oninput:ev=>{ m.sol=ev.target.value; peindre(); majCase(ev.target); }})));
+    }
+  }
+}
+
+function majCase(noeud){
+  const carte = noeud.closest('.case');
+  if(carte){
+    const c = CASES.find(x=>x.id===carte.dataset.case);
+    const ok = caseComplete(c);
+    carte.classList.toggle('complete', ok);
+    carte.querySelector('.coche').textContent = ok ? '✔ Case complète' : 'À compléter';
+  }
+  sauver(); rendreApercu();
+}
+
+function pageMoodboard(){
+  if(!etat.enseigne) return el('div',{class:'vide'}, "Choisissez d'abord votre enseigne dans l'onglet « Mon enseigne ».");
+  const e = ENSEIGNES[etat.enseigne];
+  const cases = el('div',{class:'cases'}, CASES.map(c=>{
+    const ok = caseComplete(c);
+    return el('div',{class:'case'+(ok?' complete':''), 'data-case':c.id},
+      el('div',{class:'case-tete'}, el('h3',{}, c.titre), el('span',{class:'coche'}, ok?'✔ Case complète':'À compléter')),
+      el('p',{class:'aide'}, c.aide),
+      contenuCase(c)
+    );
+  }));
+  const bilanMood = el('div',{class:'case'+((etat.mood.pqGlobal||'').trim().length>=10?' complete':''), id:'caseGlobale'},
+    el('div',{class:'case-tete'}, el('h3',{}, 'Pour finir : votre justification')),
+    el('p',{class:'aide'}, "En deux phrases : pourquoi cette ambiance correspond-elle à votre enseigne et à ses clients ?"),
+    el('textarea',{placeholder:"Exemple : Nous avons choisi… parce que les clients de l'enseigne…", oninput:ev=>{ etat.mood.pqGlobal = ev.target.value;
+      document.getElementById('caseGlobale').classList.toggle('complete', ev.target.value.trim().length>=10); sauver(); }}, etat.mood.pqGlobal||''));
+  const rappel = el('div',{class:'exigences', style:'margin:0 0 14px'},
+    el('span',{class:'etiquette'}, 'Rappel du brief — '+e.nom),
+    el('ul',{}, e.exigences.map(x=>el('li',{},x))));
+  return el('div',{class:'mood'},
+    el('section',{}, el('h2',{}, 'Le moodboard de votre magasin'), rappel, cases, bilanMood),
+    el('aside',{class:'apercu', id:'apercu','aria-label':'Aperçu du moodboard'})
+  );
+}
+
+function rendreApercu(){
+  const z = document.getElementById('apercu'); if(!z) return;
+  const m = etat.mood; const e = ENSEIGNES[etat.enseigne];
+  const nb = CASES.filter(caseComplete).length;
+  const etiq = (t, v) => el('div',{class:'etiq'}, el('b',{}, t), v || '—');
+  const planche = el('div',{class:'planche'},
+    el('div',{class:'titre'}, el('span',{'aria-hidden':'true'}, e.pic), e.nom),
+    el('div',{class:'bande'}, m.couleurs.length ? m.couleurs.map(c=>el('div',{style:`background:${c}`})) : el('div',{})),
+    ...m.produits.map(p=>el('div',{class:'im', style:p.img?`background-image:url(${p.img})`:'', title:p.nom})),
+    etiq('Matières', m.matieres.join(', ')),
+    etiq('Lumière', m.lumiere),
+    etiq('Son', [...m.sons, m.sonAutre.trim()].filter(Boolean).join(', ')),
+    etiq('Odeur', [...m.odeurs, m.odeurAutre.trim()].filter(Boolean).join(', ')),
+    el('div',{class:'bande', style:'height:28px'}, el('div',{style:`background:${m.murs}`}), el('div',{style:`background:${m.sol}`})),
+    el('div',{class:'motsap'}, m.mots.filter(x=>x.trim()).join(' · ') || 'Vos trois mots')
+  );
+  z.replaceChildren(
+    el('span',{class:'etiquette'}, 'Aperçu'),
+    planche,
+    el('p',{class:'progression'}, `${nb} case${nb>1?'s':''} complète${nb>1?'s':''} sur ${CASES.length}`,
+      el('div',{class:'barre'}, el('div',{style:`width:${Math.round(nb/CASES.length*100)}%`})))
+  );
+}
+
+/* =========================================================
+   PLAN DU MAGASIN (séance 4) — aménagement pas à pas
+   ========================================================= */
+const L = 20, H = 15;                       // cellule de 300 m² (20 m × 15 m)
+const RESERVE = {x:0, y:0, w:7, h:3.5};      // réserve au fond
+const PORTE = {x:8.5, w:3};                  // entrée au centre de la façade (y = 15)
+const ENTREE = {x:10, y:15};
+const VITRINES = [{x:0.5, y:13.8, w:7, h:1.2}, {x:12.5, y:13.8, w:7, h:1.2}];
+
+/* Emplacements prédéfinis PROPRES À CHAQUE ENSEIGNE (même cellule de 300 m²).
+   defaut : ce qu'on y trouve si le binôme n'y place rien. mur : meuble haut contre un mur. ilot : grand espace (pièce mise en scène). */
+const PLANS = {
+  /* Carrefour City : caisses à l'entrée, frais dès l'entrée, gondoles basses en allées parallèles, froid en ceinture */
+  city:[
+    {n:1,  nom:"Îlot face à l'entrée",             x:8.4,   y:8.2,  w:3.2, h:2,   defaut:'Promotions'},
+    {n:2,  nom:'Gondole 1, allée de gauche',       x:2.6,   y:4.8,  w:1,   h:5.4, defaut:'Épicerie salée'},
+    {n:3,  nom:'Gondole 2, allée de gauche',       x:5.6,   y:4.8,  w:1,   h:5.4, defaut:'Épicerie sucrée'},
+    {n:4,  nom:'Gondole 3, allée de droite',       x:13.4,  y:4.8,  w:1,   h:5.4, defaut:'Hygiène, beauté'},
+    {n:5,  nom:'Gondole 4, allée de droite',       x:16.2,  y:4.8,  w:1,   h:5.4, defaut:'Entretien'},
+    {n:6,  nom:'Îlot central, au fond',            x:8.6,   y:3.9,  w:2.8, h:1.2, defaut:'Conserves'},
+    {n:7,  nom:'Meuble froid, mur du fond',        x:7.5,   y:0.15, w:6,   h:1,   mur:true, defaut:'Produits laitiers'},
+    {n:8,  nom:'Meuble froid, fond à droite',      x:14,    y:0.15, w:5.8, h:1,   mur:true, defaut:'Surgelés'},
+    {n:9,  nom:'Meuble froid, mur droit',          x:18.85, y:2,    w:1,   h:9,   mur:true, defaut:'Boissons fraîches'},
+    {n:10, nom:'Mur gauche',                       x:0.15,  y:4.4,  w:1,   h:6.6, mur:true, defaut:'Boissons, eaux'}
+  ],
+  /* Normal : parcours en labyrinthe. Rangées de gondoles hautes qui ne laissent qu'un passage à une extrémité,
+     en alternance : le client zigzague de l'entrée jusqu'au fond, puis redescend par le couloir de gauche vers la sortie. */
+  normal:[
+    {n:1,  nom:"Rangée 1, partie gauche",          x:3.8,   y:10.8, w:6.6, h:1,   haut:true, defaut:'Nouveautés'},
+    {n:2,  nom:"Rangée 1, partie droite",          x:10.4,  y:10.8, w:6.6, h:1,   haut:true, defaut:'Hygiène'},
+    {n:3,  nom:'Rangée 2, partie gauche',          x:5.8,   y:7.4,  w:6.5, h:1,   haut:true, defaut:'Confiserie'},
+    {n:4,  nom:'Rangée 2, partie droite',          x:12.3,  y:7.4,  w:6.55,h:1,   haut:true, defaut:'Boissons'},
+    {n:5,  nom:'Rangée 3, partie gauche',          x:3.8,   y:4.4,  w:6.6, h:0.8, haut:true, defaut:'Cheveux'},
+    {n:6,  nom:'Rangée 3, partie droite',          x:10.4,  y:4.4,  w:6.6, h:0.8, haut:true, defaut:'Soins du visage'},
+    {n:7,  nom:'Mur du fond, à gauche',            x:7.3,   y:0.15, w:5.7, h:1,   mur:true, defaut:'Maquillage'},
+    {n:8,  nom:'Mur du fond, à droite',            x:13.2,  y:0.15, w:5.5, h:1,   mur:true, defaut:'Parfums'},
+    {n:9,  nom:'Mur droit, au fond',               x:18.85, y:1.4,  w:1,   h:5.8, mur:true, defaut:'Entretien'},
+    {n:10, nom:"Mur droit, à l'avant",             x:18.85, y:8.6,  w:1,   h:4.6, mur:true, defaut:'Petite déco'},
+    {n:11, nom:'Couloir de sortie, côté droit',    x:3.0,   y:4.4,  w:0.8, h:7.4, haut:true, defaut:'Papeterie'},
+    {n:12, nom:'Mur gauche, couloir de sortie',    x:0.15,  y:4,    w:1,   h:7.6, mur:true, defaut:'Snacks'}
+  ],
+  /* Nature & Découvertes : promenade libre à travers des univers en niches, arbre totem, tables en bois */
+  nd:[
+    {n:1,  nom:"Table face à l'entrée",              x:8.5,   y:9.4,  w:3,   h:1.5, defaut:'Nouveautés'},
+    {n:2,  nom:'Niche avant gauche',                 x:0.15,  y:8.4,  w:2.3, h:2.9, mur:true, defaut:'Bien-être'},
+    {n:3,  nom:'Niche avant droite',                 x:17.55, y:8.4,  w:2.3, h:2.9, mur:true, defaut:'Saveurs'},
+    {n:4,  nom:'Niche arrière gauche',               x:0.15,  y:4.2,  w:2.3, h:3.4, mur:true, defaut:'Jeux et jouets'},
+    {n:5,  nom:'Niche arrière droite',               x:17.55, y:3.2,  w:2.3, h:4.4, mur:true, defaut:'Outdoor et voyage'},
+    {n:6,  nom:'Niche du fond, au centre',           x:7.6,   y:0.15, w:4.8, h:2,   mur:true, defaut:'Librairie'},
+    {n:7,  nom:'Niche du fond, à droite',            x:13.2,  y:0.15, w:4.2, h:2,   mur:true, defaut:'Astronomie'},
+    {n:8,  nom:'Arbre totem, au centre',             x:9,     y:4.9,  w:2,   h:2,   ilot:true, defaut:'Arbre totem'},
+    {n:9,  nom:'Table en bois, à gauche',            x:4.4,   y:5.8,  w:2.4, h:2,   ilot:true, defaut:'Idées cadeaux'},
+    {n:10, nom:'Table en bois, à droite',            x:13.2,  y:5.8,  w:2.4, h:2,   ilot:true, defaut:'Art de vivre'}
+  ],
+  /* Maisons du Monde : espace ouvert, tables basses au centre, meubles hauts en périphérie, pièces mises en scène */
+  mdm:[
+    {n:1,  nom:"Table basse face à l'entrée",        x:8.7,   y:9.6,  w:2.6, h:1.2, defaut:'Nouveautés'},
+    {n:2,  nom:'Table basse centrale',               x:8.7,   y:6.9,  w:2.6, h:1.2, defaut:'Bougies et senteurs'},
+    {n:3,  nom:'Table basse, à gauche',              x:3.4,   y:8.6,  w:2.8, h:1.2, defaut:'Vaisselle'},
+    {n:4,  nom:'Table basse, à droite',              x:13.8,  y:8.6,  w:2.8, h:1.2, defaut:'Coussins, plaids'},
+    {n:5,  nom:'Grand espace, au fond',              x:7.8,   y:1.6,  w:5,   h:3.4, ilot:true, defaut:'Salle à manger'},
+    {n:6,  nom:'Grand espace, à gauche',             x:1.6,   y:4.2,  w:4.4, h:3.4, ilot:true, defaut:'Chambre'},
+    {n:7,  nom:'Grand espace, à droite',             x:13.8,  y:3,    w:4.4, h:3.8, ilot:true, defaut:'Salon'},
+    {n:8,  nom:'Meubles hauts, mur gauche',          x:0.15,  y:8,    w:1,   h:5,   mur:true, defaut:'Luminaires'},
+    {n:9,  nom:'Meubles hauts, mur droit',           x:18.85, y:7.4,  w:1,   h:5.6, mur:true, defaut:'Miroirs et cadres'},
+    {n:10, nom:'Meubles hauts, mur du fond',         x:13.6,  y:0.15, w:6,   h:1,   mur:true, defaut:'Arts de la table'}
+  ]
+};
+const emps = () => PLANS[etat.enseigne] || [];
+const DECORS = {};
+const decors = () => DECORS[etat.enseigne] || [];
+
+
+const FAMILLES = {
+  appel:     {nom:"Produits d'appel",     lettre:'A', couleur:'#c2185b', def:"Ce que le client vient chercher : ces produits le font entrer et circuler."},
+  impulsion: {nom:"Produits d'impulsion", lettre:'I', couleur:'#e67e22', def:"Achetés sans l'avoir prévu, sur un coup d'envie."},
+  reflexion: {nom:"Produits de réflexion",lettre:'R', couleur:'#2e6fa7', def:"Achetés après avoir comparé et pris le temps de réfléchir."},
+  necessite: {nom:"Première nécessité",   lettre:'N', couleur:'#5b6b2f', def:"Les produits indispensables du quotidien."}
+};
+
+const EXEMPLES = {
+  nd:{appel:"les nouveautés et les coffrets cadeaux", impulsion:"les petites bougies, les jeux de poche, les chocolats", reflexion:"les jumelles, les télescopes, les diffuseurs d'huiles essentielles"},
+  normal:{appel:"les grandes marques de beauté à petit prix", impulsion:"les bonbons, les chips, les petits gadgets", reflexion:"les soins de beauté, les petits appareils", necessite:"le dentifrice, le gel douche, la lessive"},
+  city:{appel:"les promotions de la semaine, les boissons fraîches", impulsion:"les confiseries, les chewing-gums, les snacks", reflexion:"les vins, l'épicerie fine", necessite:"le lait, les pâtes, le café, le papier toilette"},
+  mdm:{appel:"les nouveautés de la collection, les petits prix déco", impulsion:"les bougies, les cadres, la petite déco", reflexion:"les canapés, les tables, les luminaires"}
+};
+
+function etapesPlan(){
+  const E = etat.enseigne, ex = EXEMPLES[E] || {};
+  const REGLES = {
+    appel:{regle:"On place les produits d'appel loin de l'entrée, au fond ou dans un endroit où le client n'irait pas tout seul. Pour les atteindre, il traverse le magasin et passe devant les autres produits.",
+      regarder:["L'emplacement est-il loin de l'entrée ?","Est-il au fond du magasin ?","Le client doit-il passer devant d'autres rayons pour y arriver ?"],
+      conseil:"Cet emplacement est déjà un endroit où le client passe tout seul. Relisez la règle : où faut-il mettre ce que le client vient chercher ?"},
+    impulsion:{regle:"On place les produits d'impulsion juste à côté de la caisse ou sur le passage principal. Le client les voit en attendant de payer et les prend sans l'avoir prévu.",
+      regarder:["L'emplacement touche-t-il presque la caisse ?","Le client passe-t-il forcément devant ?"],
+      conseil:"Cet emplacement est loin de la caisse. Relisez la règle : où le client attend-il ?"},
+    reflexion:{regle:"On place les produits de réflexion dans un endroit calme, un peu à l'écart de l'entrée et de la caisse. Le client a besoin de temps pour comparer et d'un vendeur pour le conseiller.",
+      regarder:["L'emplacement est-il loin de l'agitation de l'entrée ?","Le client peut-il s'y arrêter sans gêner les autres ?"],
+      conseil:"Cet emplacement est trop près de l'entrée, là où les clients passent vite. Relisez la règle : où peut-on prendre son temps ?"},
+    necessite: etat.enseigne==='city'
+      ? {regle:"Chez Carrefour City, le client est souvent pressé : les produits de première nécessité se placent sur son chemin, pas trop loin de l'entrée, pour qu'il les trouve vite.",
+         regarder:["L'emplacement est-il facile à atteindre depuis l'entrée ?","Un client pressé le trouve-t-il en quelques secondes ?"],
+         conseil:"Cet emplacement est au fond. Relisez le brief : un client pressé doit trouver ces produits très vite."}
+      : {regle:"On place la première nécessité au fond ou le long du parcours. Le client en a besoin, il ira la chercher, et il passera devant les autres produits en chemin.",
+         regarder:["L'emplacement oblige-t-il le client à traverser une partie du magasin ?","Est-il sur le parcours ?"],
+         conseil:"Cet emplacement est tout près de l'entrée : le client prendra son produit et repartira sans rien voir d'autre. Relisez la règle."}
+  };
+  const fam = f => ({id:f, type:'place', fam:f, label:FAMILLES[f].nom, c:FAMILLES[f].couleur,
+    q:`Où placez-vous vos ${FAMILLES[f].nom.toLowerCase().replace('première nécessité','produits de première nécessité')} ?`,
+    aide:FAMILLES[f].def, ex:ex[f], ...REGLES[f]});
+  const e = [
+    {id:'caisse', type:'caisse', label:'Caisse', c:'#6b4f3a',
+     q: E==='city' ? 'Où placez-vous la caisse et le comptoir de services ?' : 'Où placez-vous la caisse ?',
+     aide:"La caisse n'est pas un rayon : vous la posez où vous voulez sur le sol libre. Cliquez sur le plan pour la poser, cliquez ailleurs pour la déplacer.",
+     regle:"On place la caisse près de la sortie, bien visible. Le client y passe en dernier, et le personnel de caisse surveille l'entrée.",
+     regarder:["L'emplacement est-il près de l'entrée, qui sert aussi de sortie ?","Est-il visible dès qu'on entre ?"],
+     conseil:"Cet emplacement est loin de la sortie. Relisez la règle : par où le client quitte-t-il le magasin ?"},
+    fam('appel'), fam('impulsion'), fam('reflexion')
+  ];
+  if(E==='city' || E==='normal') e.push(fam('necessite'));
+  if(E==='nd') e.push(
+    {id:'essai', type:'place', label:'Présentoir « à essayer »', c:'#9bb07a', q:"Où placez-vous le présentoir « à essayer » ?",
+     aide:"Le brief demande que le client puisse toucher, sentir et essayer les produits.",
+     regle:"Un présentoir où l'on essaie doit être vu et laisser de la place autour : sur un îlot ou sur le passage, jamais dans un coin.",
+     regarder:["L'emplacement est-il sur le passage des clients ?","Peut-on s'y arrêter à plusieurs ?"],
+     conseil:"Cet emplacement est dans un coin peu fréquenté. Relisez la règle : les clients le trouveront-ils ?"},
+    {id:'ambiance', type:'place', label:'Fontaine et coin tisane', c:'#6fa3b5', q:"Où placez-vous la fontaine et le coin tisane ?",
+     aide:"Le brief demande que l'odeur et le son se perçoivent dès l'entrée.",
+     regle:"Pour que le client sente l'odeur et entende le son dès qu'il entre, la fontaine et le coin tisane se placent près de l'entrée.",
+     regarder:["L'emplacement est-il près de l'entrée ?"],
+     conseil:"Cet emplacement est loin de l'entrée. Relisez le brief : quand le client doit-il sentir l'odeur ?"});
+  if(E==='normal') e.push(
+    {id:'bacs', type:'place', label:'Bacs à trouvailles', c:'#e8566c', q:"Où placez-vous les bacs à trouvailles ?",
+     aide:"De petits produits à hauteur de main, que le client découvre en passant.",
+     regle:"Les trouvailles se découvrent en passant : placez les bacs à un endroit où le client passe forcément, sur son parcours.",
+     regarder:["Le client passe-t-il forcément devant cet emplacement ?","Est-il sur un îlot ou le long du passage ?"],
+     conseil:"Cet emplacement est dans un coin où le client passe peu. Relisez la règle."},
+    {id:'chemin', type:'chemin', q:"Tracez le parcours à sens unique du client.",
+     aide:"Chez Normal, les rangées de gondoles forment un couloir unique. Cliquez sur le plan, point après point, pour suivre ce couloir de l'entrée jusqu'à la caisse.",
+     regle:"Un parcours à sens unique part de l'entrée, passe devant tous les emplacements, sans revenir en arrière, et se termine à la caisse.",
+     regarder:["Mon trajet passe-t-il près de chaque emplacement ?","Commence-t-il à l'entrée et se termine-t-il à la caisse ?","Évite-t-il de revenir sur ses pas ?"]});
+  if(E==='city') e.push(
+    {id:'frais', type:'place', label:'Fruits et légumes, boulangerie', c:'#7cb342', q:"Où placez-vous les fruits et légumes et la boulangerie ?",
+     aide:"Le brief veut qu'on les voie dès l'entrée.",
+     regle:"Le frais donne une image de fraîcheur et attire l'œil : on le place dès l'entrée, bien en vue.",
+     regarder:["L'emplacement est-il près de l'entrée ?","Le voit-on depuis la porte ?"],
+     conseil:"Cet emplacement est loin de l'entrée. Relisez le brief : quand le client doit-il voir le frais ?"});
+  if(E==='mdm') e.push(
+    {id:'piece', type:'place', ilot:true, label:'Pièce mise en scène', c:'#c9a27e', q:"Où mettez-vous en scène une pièce de la maison ?",
+     aide:"Le client doit pouvoir s'imaginer le meuble chez lui. Une pièce a besoin d'un grand îlot.",
+     regle:"La pièce mise en scène se place sur un grand îlot, bien visible, pour que le client en fasse le tour et s'imagine chez lui.",
+     regarder:["L'îlot est-il visible depuis l'entrée ou depuis le passage principal ?","Peut-on en faire le tour ?"]},
+    {id:'coeur', type:'place', label:'Coups de cœur', c:'#e79aa9', q:"Où placez-vous l'espace « coups de cœur » ?",
+     aide:"Des produits choisis pour faire envie.",
+     regle:"Les coups de cœur donnent envie d'avancer : on les place bien en vue, au fond ou sur le passage, pour attirer le client plus loin.",
+     regarder:["L'emplacement donne-t-il envie d'aller plus loin dans le magasin ?","Est-il bien visible ?"],
+     conseil:"Cet emplacement est dans un coin caché. Relisez la règle."});
+  e.push(
+    {id:'zones', type:'zones', q:'Prévoyez vos zones chaudes et froides.',
+     aide:"Les autres emplacements accueillent les autres produits. Coloriez maintenant les endroits où les clients passeront beaucoup et ceux où ils iront peu.",
+     regle:"Zones chaudes : l'entrée, l'allée centrale, le côté droit (le client tourne naturellement à droite), autour de la caisse, autour des produits d'appel. Zones froides : les angles du fond, le fond à gauche, les recoins cachés derrière les meubles.",
+     regarder:["Coloriez au moins 5 cases chaudes et 5 cases froides.","Pour chaque case, demandez-vous : un client passe-t-il ici sans y penser ?"]},
+    {id:'verif', type:'verif', q:'Vérifiez votre plan.',
+     aide:"Lisez chaque question. Pour changer un choix, revenez à l'étape concernée avec « Précédent » ou la liste des étapes."});
+  return e;
+}
+
+let pinceau = 'c', montrerIndice = false, resultats = null;
+const NS = 'http://www.w3.org/2000/svg';
+function sv(tag, attrs={}, ...enfants){
+  const n = document.createElementNS(NS, tag);
+  for(const [k,v] of Object.entries(attrs)) if(v != null && v !== false) n.setAttribute(k, v);
+  for(const e of enfants.flat()){ if(e == null) continue; n.append(e.nodeType ? e : document.createTextNode(e)); }
+  return n;
+}
+const centre = b => ({x:b.x+b.w/2, y:b.y+b.h/2});
+const dist = (a,b) => Math.hypot(a.x-b.x, a.y-b.y);
+const arrondi = (v,pas=0.5) => Math.round(v/pas)*pas;
+function distBoite(p, b){
+  const dx = Math.max(b.x - p.x, 0, p.x - (b.x+b.w));
+  const dy = Math.max(b.y - p.y, 0, p.y - (b.y+b.h));
+  return Math.hypot(dx, dy);
+}
+const planEtat = () => { const P = etat.plan; P.choix = P.choix || {}; P.caisse = P.caisse || null; P.chemin = P.chemin || []; P.zones = P.zones || {}; P.etape = P.etape || 0; return P; };
+const emp = n => emps().find(s=>s.n===n);
+const CAISSE = {w:2.6, h:1};
+function boiteCaisse(){ const c = planEtat().caisse; if(!c) return null;
+  return {n:0, nom:'Caisse', x:c.x, y:c.y, w:c.r?CAISSE.h:CAISSE.w, h:c.r?CAISSE.w:CAISSE.h}; }
+
+/* Meubles déduits des choix : un par étape placée, les emplacements restants = autres produits */
+function meublesPlan(){
+  const P = planEtat(), liste = [], pris = new Set();
+  const bc = boiteCaisse();
+  if(bc) liste.push({id:'caisse', fam:'', label:'Caisse', c:'#6b4f3a', box:bc, haut:false, slot:0});
+  for(const et of etapesPlan()){
+    const ch = P.choix[et.id];
+    if(et.type!=='place' || !ch || !ch.slot) continue;
+    const s = emp(ch.slot); pris.add(s.n);
+    liste.push({id:et.id, fam:et.fam||'', label:et.label, c:et.c, box:s, haut:!!(s.mur||s.haut), slot:s.n});
+  }
+  for(const s of emps()) if(!pris.has(s.n)) liste.push({id:'autre'+s.n, autre:true, fam:'', label:s.defaut, c:'#b8c2bd', box:s, haut:!!(s.mur||s.haut), slot:s.n});
+  return liste;
+}
+const etapesPlacees = () => etapesPlan().filter(e=>e.type==='place');
+const toutPlace = () => etapesPlacees().every(e=>planEtat().choix[e.id]?.slot);
+
+/* ----- Calcul des zones à partir de l'aménagement ----- */
+function grilleObstacles(meubles){
+  const obst = [RESERVE, ...VITRINES, ...decors(), ...meubles.map(m=>m.box)];
+  const bloque = [];
+  for(let y=0;y<H;y++){ bloque[y]=[]; for(let x=0;x<L;x++){
+    const c = {x:x+.5, y:y+.5};
+    bloque[y][x] = obst.some(b => c.x>b.x && c.x<b.x+b.w && c.y>b.y && c.y<b.y+b.h);
+  }}
+  return bloque;
+}
+function distancesMarche(bloque){
+  const d = Array.from({length:H}, ()=>Array(L).fill(Infinity)), file = [];
+  for(let x=Math.floor(PORTE.x); x<PORTE.x+PORTE.w; x++) if(!bloque[H-1][x]){ d[H-1][x]=1; file.push([x,H-1]); }
+  while(file.length){
+    const [x,y] = file.shift();
+    for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){
+      const nx=x+dx, ny=y+dy;
+      if(nx<0||ny<0||nx>=L||ny>=H||bloque[ny][nx]||d[ny][nx]!==Infinity) continue;
+      d[ny][nx] = d[y][x]+1; file.push([nx,ny]);
+    }
+  }
+  return d;
+}
+function calculerZones(avecAppel=true){
+  const meubles = meublesPlan();
+  const bloque = grilleObstacles(meubles), marche = distancesMarche(bloque);
+  const caisse = meubles.find(m=>m.id==='caisse');
+  const appels = meubles.filter(m=>m.fam==='appel').map(m=>m.box);
+  const z = {};
+  for(let y=0;y<H;y++) for(let x=0;x<L;x++){
+    if(bloque[y][x] || marche[y][x]===Infinity) continue;
+    const c = {x:x+.5, y:y+.5}; let h = 0;
+    const dEnt = dist(c, ENTREE);
+    if(dEnt <= 4.5) h += 2;                                        // abords de l'entrée
+    if(c.x > 10.5 && c.y > 5) h += 1;                              // côté droit, sens naturel de circulation
+    if(c.x >= 8 && c.x <= 12) h += 1;                              // allée centrale depuis l'entrée
+    if(caisse && distBoite(c, caisse.box) <= 2.5) h += 2;           // abords de la caisse
+    if(c.y < 5.5) h -= 1;                                          // fond du magasin
+    if((c.x < 3 || c.x > 17) && c.y < 6) h -= 2;                   // angles du fond
+    if(marche[y][x] > dEnt*1.6 + 3) h -= 1;                        // recoin caché derrière des meubles
+    if(avecAppel && appels.some(b=>distBoite(c,b) <= 2.5)) h += 2; // réchauffé par un produit d'appel
+    if(etat.enseigne==='normal') h += 1;                          // parcours imposé : le client passe partout
+    z[x+','+y] = h >= 2 ? 'c' : (h <= -1 ? 'f' : 't');
+  }
+  return {zones:z, marche};
+}
+
+/* ----- Vérification ----- */
+function verifierPlan(){
+  const P = planEtat(), M = meublesPlan(), R = [];
+  const ok = t => R.push({ok:true, t}), q = t => R.push({ok:false, t});
+  const {zones, marche} = calculerZones(true);
+  const base = calculerZones(false).zones;
+  const get = id => M.find(m=>m.id===id);
+  const zoneDe = zoneAutour;
+  const marcheVers = b => { let best = Infinity;
+    for(let y=Math.floor(b.y)-1;y<=Math.ceil(b.y+b.h);y++) for(let x=Math.floor(b.x)-1;x<=Math.ceil(b.x+b.w);x++)
+      if(y>=0&&y<H&&x>=0&&x<L) best = Math.min(best, marche[y][x]);
+    return best; };
+  const pres = (id, r) => { const m = get(id); return m && dist(centre(m.box), ENTREE) <= r; };
+
+  const caisse = get('caisse');
+  if(caisse) dist(centre(caisse.box), ENTREE) > 7
+    ? q("La caisse est loin de la sortie. Par où passe le client quand il a fini ses achats ?")
+    : ok("La caisse est sur le chemin de la sortie.");
+
+  const appel = get('appel');
+  if(appel) zoneDe(appel.box, base)==='c'
+    ? q("Vos produits d'appel sont déjà dans une zone où le client passe naturellement. Attirent-ils le client là où il ne serait pas allé seul ?")
+    : ok("Les produits d'appel attirent le client vers une zone moins fréquentée.");
+  const imp = get('impulsion');
+  if(imp && caisse) distBoite(centre(caisse.box), imp.box) > 4
+    ? q("Les produits d'impulsion sont loin de la caisse. Que regarde un client qui attend pour payer ?")
+    : ok("Les produits d'impulsion attendent le client près de la caisse.");
+  const refl = get('reflexion');
+  if(refl) (dist(centre(refl.box), ENTREE) < 6.5)
+    ? q("Les produits de réflexion sont juste à l'entrée, là où les clients passent vite. Où pourront-ils prendre le temps de comparer ?")
+    : ok("Les produits de réflexion sont dans un endroit plus calme.");
+  const nec = get('necessite');
+  if(nec){
+    if(etat.enseigne==='city') marcheVers(nec.box) > 12
+      ? q("Les produits de première nécessité sont loin de l'entrée. Un client pressé les trouvera-t-il vite ?")
+      : ok("Un client pressé trouve vite la première nécessité.");
+    else zoneDe(nec.box, base)==='c'
+      ? q("La première nécessité est tout près de l'entrée. Le client verra-t-il le reste du magasin s'il trouve tout de suite ce qu'il cherche ?")
+      : ok("Pour trouver la première nécessité, le client traverse une partie du magasin.");
+  }
+
+  const E = etat.enseigne;
+  if(E==='nd'){
+    pres('ambiance',7) ? ok("La fontaine et le coin tisane accueillent le client dès l'entrée.")
+      : q("Le brief demande que l'odeur et le son se perçoivent dès l'entrée. Le client les percevra-t-il en entrant ?");
+    const es = get('essai');
+    if(es) zoneDe(es.box, base)==='f' ? q("Le présentoir « à essayer » est dans un coin peu fréquenté. Les clients le trouveront-ils ?") : ok("Le présentoir « à essayer » est visible.");
+  }
+  if(E==='normal'){
+    const ch = P.chemin;
+    if(ch.length < 3) q("Le parcours à sens unique n'est pas encore tracé.");
+    else {
+      caisse && dist(ch[ch.length-1], centre(caisse.box)) > 3.5 ? q("Le parcours ne se termine pas à la caisse. Où arrive le client à la fin de son tour ?") : ok("Le parcours se termine à la caisse.");
+      const prochePoint = b => { for(let i=1;i<ch.length;i++){ const a=ch[i-1], c=ch[i];
+          for(let t=0;t<=1;t+=.1){ if(distBoite({x:a.x+(c.x-a.x)*t, y:a.y+(c.y-a.y)*t}, b) <= 2.5) return true; } } return false; };
+      const oublies = M.filter(m=>!prochePoint(m.box)).length;
+      oublies ? q(`Le parcours ne passe pas devant ${oublies} emplacement${oublies>1?'s':''}. Le brief dit que le client passe devant tous les rayons : est-ce le cas ?`) : ok("Le parcours passe devant tous les rayons.");
+    }
+  }
+  if(E==='city'){
+    pres('frais',7) ? ok("Le frais et la boulangerie se voient dès l'entrée.") : q("Le brief veut que le frais et la boulangerie se voient dès l'entrée. Qu'est-ce que le client voit en premier chez vous ?");
+    if(caisse) dist(centre(caisse.box), ENTREE) > 7
+      ? q("Le comptoir de services est loin de l'entrée. Un client qui vient seulement retirer un colis doit-il traverser tout le magasin ?")
+      : ok("Le comptoir de services, avec la caisse, est tout près de l'entrée.");
+  }
+  if(E==='mdm'){
+    const fond = M.filter(m=>centre(m.box).y < 5.5 && !m.autre);
+    fond.length ? ok("Quelque chose attire le regard au fond du magasin.") : q("Le brief veut qu'on voie jusqu'au fond depuis l'entrée. Qu'y a-t-il au fond pour donner envie d'y aller ?");
+  }
+
+  const eleve = Object.entries(P.zones);
+  if(!eleve.length) q("Vous n'avez pas colorié vos zones. Revenez à l'étape précédente pour faire vos prévisions.");
+  else {
+    let bon = 0, total = 0;
+    for(const [k,v] of eleve){ const t = zones[k]; if(!t) continue; total++; if(t===v) bon++; }
+    R.unshift({score:true, t:`Vos zones : ${bon} case${bon>1?'s':''} sur ${total} correspondent à l'analyse de votre plan.`});
+  }
+  return R;
+}
+
+/* ----- Dessin du plan ----- */
+function dessinerPlan(){
+  const svg = document.getElementById('svgPlan'); if(!svg) return;
+  const P = planEtat(), etapes = etapesPlan(), et = etapes[Math.min(P.etape, etapes.length-1)];
+  const place = et.type==='place', zonesVisibles = ['zones','verif'].includes(et.type);
+  const M = meublesPlan(), g = [];
+  g.push(sv('rect',{x:0,y:0,width:L,height:H,fill:etat.mood.sol||'#efe9dc'}));
+  for(let x=1;x<L;x++) g.push(sv('line',{x1:x,y1:0,x2:x,y2:H,stroke:'rgba(0,0,0,.07)','stroke-width':.03}));
+  for(let y=1;y<H;y++) g.push(sv('line',{x1:0,y1:y,x2:L,y2:y,stroke:'rgba(0,0,0,.07)','stroke-width':.03}));
+  if(montrerIndice && et.type==='verif'){
+    for(const [k,v] of Object.entries(calculerZones(true).zones)){ if(v==='t') continue; const [x,y]=k.split(',').map(Number);
+      g.push(sv('rect',{x,y,width:1,height:1,fill:v==='c'?'rgba(214,40,57,.3)':'rgba(30,100,190,.42)'})); }
+  }
+  if(zonesVisibles) for(const [k,v] of Object.entries(P.zones)){ const [x,y]=k.split(',').map(Number);
+    g.push(sv('rect',{x:x+.08,y:y+.08,width:.84,height:.84,rx:.12,fill:montrerIndice?'none':(v==='c'?'rgba(214,40,57,.35)':'rgba(30,100,190,.4)'),stroke:v==='c'?'#d62839':'#1e64be','stroke-width':.1})); }
+  g.push(sv('rect',{x:RESERVE.x,y:RESERVE.y,width:RESERVE.w,height:RESERVE.h,fill:'#cfd6d2'}));
+  g.push(sv('text',{x:RESERVE.w/2,y:RESERVE.h/2+.2,'text-anchor':'middle','font-size':.6,fill:'#4b5a53'},'Réserve'));
+  g.push(sv('rect',{x:RESERVE.w-1.6,y:RESERVE.h-.12,width:1.2,height:.24,fill:'#fff'}));
+  for(const v of VITRINES){
+    g.push(sv('rect',{x:v.x,y:v.y,width:v.w,height:v.h,fill:'rgba(185,212,199,.55)',stroke:'#1b6b46','stroke-width':.05,'stroke-dasharray':'.2 .15'}));
+    g.push(sv('text',{x:v.x+v.w/2,y:v.y+.8,'text-anchor':'middle','font-size':.5,fill:'#12492f'},'Vitrine'));
+  }
+  g.push(sv('path',{d:`M${PORTE.x} ${H} H0 V0 H${L} V${H} H${PORTE.x+PORTE.w}`,fill:'none',stroke:'#1d2a24','stroke-width':.25}));
+  g.push(sv('text',{x:ENTREE.x,y:H+.75,'text-anchor':'middle','font-size':.55,fill:'#1b6b46','font-weight':700},'▲ Entrée'));
+  g.push(sv('text',{x:L/2,y:H+1.45,'text-anchor':'middle','font-size':.42,fill:'#5d6b64'},'Façade sur la galerie — 20 m × 15 m'));
+
+  for(const d of decors()){
+    g.push(sv('rect',{x:d.x,y:d.y,width:d.w,height:d.h,fill:'#9aa59f',stroke:'#1d2a24','stroke-width':.06}));
+    g.push(sv('text',{x:d.x+d.w/2,y:d.y+d.h/2+.15,'text-anchor':'middle','font-size':.42,fill:'#fff','font-weight':600}, d.label));
+  }
+  // emplacements
+  for(const s of emps()){
+    const m = M.find(x=>x.slot===s.n);
+    const aMoi = place && P.choix[et.id]?.slot===s.n;
+    const libre = m.autre;
+    const cliquable = place && (libre || aMoi) && (!et.ilot || s.ilot);
+    const grp = sv('g',{class:'emplacement'+(cliquable?' cliquable':'')+(aMoi?' choisi':''), 'data-n':s.n,
+      tabindex:cliquable?'0':null, role:cliquable?'button':null, 'aria-label':cliquable?`Emplacement ${s.n} : ${s.nom}`:null});
+    grp.append(sv('title',{}, `${s.n}. ${s.nom} — ${ficheEmplacement(s, place?et.id:'').join(', ')}`));
+    const vert = s.h > s.w*1.5, long = (vert?s.h:s.w) - .5;
+    const ecrire = (txt, couleur, poids) => {
+      const epais = (vert?s.w:s.h);
+      let lignes = [txt], fs = Math.max(.2, Math.min(.42, long/(txt.length*.58), epais*.45));
+      const mots = txt.split(' ');
+      if(fs < .34 && mots.length > 1 && epais >= 1.1){
+        const mi = Math.ceil(mots.length/2); lignes = [mots.slice(0,mi).join(' '), mots.slice(mi).join(' ')];
+        const max = Math.max(...lignes.map(l=>l.length));
+        fs = Math.max(.2, Math.min(.42, long/(max*.58), epais*.3));
+      }
+      const cx = s.x+s.w/2+(vert?0:.15), cy = s.y+s.h/2+(vert?-.2:.1);
+      const t = sv('text',{x:cx,y:cy,'text-anchor':'middle','font-size':fs,fill:couleur,'font-weight':poids,
+        transform:vert?`rotate(-90 ${s.x+s.w/2} ${s.y+s.h/2})`:null});
+      lignes.forEach((l,i)=>t.append(sv('tspan',{x:cx, y:cy + fs/3 + (i-(lignes.length-1)/2)*fs*1.15}, l)));
+      grp.append(t);
+    };
+    if(!libre){
+      grp.append(sv('rect',{class:'corps',x:s.x,y:s.y,width:s.w,height:s.h,rx:.12,fill:m.c,stroke:(s.mur||s.haut)?'#1d2a24':'rgba(0,0,0,.35)','stroke-width':(s.mur||s.haut)?.08:.04}));
+      ecrire(m.label, '#fff', 600);
+      if(m.fam){ const f = FAMILLES[m.fam];
+        grp.append(sv('circle',{cx:s.x+s.w-.05,cy:s.y+.05,r:.32,fill:f.couleur,stroke:'#fff','stroke-width':.06}));
+        grp.append(sv('text',{x:s.x+s.w-.05,y:s.y+.18,'text-anchor':'middle','font-size':.36,fill:'#fff','font-weight':700},f.lettre)); }
+    } else {
+      grp.append(sv('rect',{class:'corps',x:s.x,y:s.y,width:s.w,height:s.h,rx:.12,
+        fill:cliquable?'rgba(239,134,171,.3)':'#dfe5e1',stroke:cliquable?'#c2185b':((s.mur||s.haut)?'#1d2a24':'#8a968f'),
+        'stroke-width':cliquable?.09:((s.mur||s.haut)?.08:.04),'stroke-dasharray':cliquable?'.3 .18':null}));
+      ecrire(s.defaut, '#3d4a44', 500);
+    }
+    grp.append(sv('circle',{cx:s.x+.38,cy:s.y+.38,r:.3,fill:'#fff',stroke:'#1d2a24','stroke-width':.04}));
+    grp.append(sv('text',{x:s.x+.38,y:s.y+.52,'text-anchor':'middle','font-size':.36,'font-weight':700,fill:'#1d2a24'}, String(s.n)));
+    g.push(grp);
+  }
+  const bc = boiteCaisse();
+  if(bc){
+    g.push(sv('rect',{x:bc.x,y:bc.y,width:bc.w,height:bc.h,rx:.12,fill:'#6b4f3a',stroke:et.type==='caisse'?'#c2185b':'rgba(0,0,0,.35)','stroke-width':et.type==='caisse'?.14:.05}));
+    const txtC = etat.enseigne==='city' ? 'Caisse, services' : 'Caisse', fsC = Math.min(.42, (Math.max(bc.w,bc.h)-.2)/(txtC.length*.56));
+    g.push(sv('text',{x:bc.x+bc.w/2,y:bc.y+bc.h/2+fsC/3,'text-anchor':'middle','font-size':fsC,fill:'#fff','font-weight':700,
+      transform:bc.h>bc.w?`rotate(-90 ${bc.x+bc.w/2} ${bc.y+bc.h/2})`:null}, txtC));
+  }
+  if(P.chemin.length && (et.type==='chemin' || et.type==='verif' || etat.enseigne==='normal')){
+    g.push(sv('polyline',{points:P.chemin.map(p=>p.x+','+p.y).join(' '),fill:'none',stroke:'#1b6b46','stroke-width':.14,'stroke-linejoin':'round','stroke-dasharray':'.45 .2','marker-end':'url(#fleche)'}));
+    P.chemin.forEach((p,i)=>g.push(sv('circle',{cx:p.x,cy:p.y,r:i?.12:.22,fill:'#1b6b46'})));
+  }
+  svg.replaceChildren(
+    sv('defs',{}, sv('marker',{id:'fleche',viewBox:'0 0 10 10',refX:6,refY:5,markerWidth:4,markerHeight:4,orient:'auto-start-reverse'}, sv('path',{d:'M0 0 L10 5 L0 10 z',fill:'#1b6b46'}))),
+    ...g);
+  svg.style.cursor = (et.type==='chemin'||et.type==='zones'||et.type==='caisse') ? 'crosshair' : 'default';
+}
+
+function pointSvg(ev){
+  const svg = document.getElementById('svgPlan');
+  const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+  return pt.matrixTransform(svg.getScreenCTM().inverse());
+}
+const croiseB = (a,b) => a.x < b.x+b.w && b.x < a.x+a.w && a.y < b.y+b.h && b.y < a.y+a.h;
+const ZONE_PORTE = {x:8.3, y:13.2, w:3.4, h:1.8};
+let erreurCaisse = '';
+function placerCaisse(p, r){
+  const P = planEtat();
+  const rot = r ?? (P.caisse ? P.caisse.r : 0);
+  const w = rot?CAISSE.h:CAISSE.w, h = rot?CAISSE.w:CAISSE.h;
+  const b = {x:Math.min(Math.max(.2, arrondi(p.x - w/2)), L-.2-w), y:Math.min(Math.max(.2, arrondi(p.y - h/2)), H-.2-h), w, h};
+  const obst = [RESERVE, ...VITRINES, ...decors(), ...emps(), ZONE_PORTE];
+  if(obst.some(o=>croiseB(b,o))){
+    erreurCaisse = "Pas assez de place ici : la caisse toucherait un rayon, la vitrine ou la porte. Cliquez sur un espace libre du sol.";
+  } else { P.caisse = {x:b.x, y:b.y, r:rot}; erreurCaisse = ''; resultats = null; sauver(); }
+  dessinerPlan(); dessinerPanneau();
+}
+function choisirEmplacement(n){
+  const P = planEtat(), et = etapesPlan()[P.etape];
+  if(et.type!=='place') return;
+  const s = emp(n), m = meublesPlan().find(x=>x.slot===n);
+  if(!m.autre && m.id!==et.id) return;
+  if(et.ilot && !s.ilot) return;
+  P.choix[et.id] = {...(P.choix[et.id]||{pq:''}), slot:n};
+  resultats = null; sauver(); dessinerPlan(); dessinerPanneau();
+}
+function installerInteractions(svg){
+  let peint = false;
+  const peindre = p => {
+    const x = Math.floor(p.x), y = Math.floor(p.y);
+    if(x<0||y<0||x>=L||y>=H) return;
+    const k = x+','+y, Z = planEtat().zones;
+    if(pinceau==='x') delete Z[k]; else Z[k] = pinceau;
+    dessinerPlan();
+  };
+  svg.addEventListener('pointerdown', ev=>{
+    const P = planEtat(), et = etapesPlan()[P.etape];
+    if(et.type==='caisse'){ placerCaisse(pointSvg(ev)); }
+    else if(et.type==='place'){ const g = ev.target.closest('.emplacement.cliquable'); if(g) choisirEmplacement(Number(g.dataset.n)); }
+    else if(et.type==='chemin'){
+      const p = pointSvg(ev); if(p.x<0||p.y<0||p.x>L||p.y>H+.5) return;
+      P.chemin.push({x:arrondi(p.x), y:Math.min(H,arrondi(p.y))}); sauver(); dessinerPlan(); dessinerPanneau();
+    } else if(et.type==='zones'){ peint = true; svg.setPointerCapture(ev.pointerId); peindre(pointSvg(ev)); }
+  });
+  svg.addEventListener('pointermove', ev=>{ if(peint) peindre(pointSvg(ev)); });
+  const fin = () => { if(peint){ peint=false; resultats=null; sauver(); } };
+  svg.addEventListener('pointerup', fin); svg.addEventListener('pointercancel', fin);
+  svg.addEventListener('keydown', ev=>{
+    const g = ev.target.closest && ev.target.closest('.emplacement.cliquable');
+    if(g && (ev.key==='Enter'||ev.key===' ')){ ev.preventDefault(); choisirEmplacement(Number(g.dataset.n)); }
+  });
+}
+
+
+
+/* Raisons proposées après chaque choix du plan : une seule est juste */
+const RAISONS = {
+  caisse:["Parce qu'il restait de la place à cet endroit.","Pour que le client passe à la caisse en dernier, juste avant de sortir.","Pour que le client paie dès qu'il entre."],
+  appel:["Pour que le client les trouve dès l'entrée.","Parce que ce sont les produits les moins vendus.","Pour obliger le client à traverser le magasin et à passer devant les autres produits."],
+  impulsion:["Pour que le client les voie en attendant de payer et les prenne sans l'avoir prévu.","Pour que le client prenne le temps de les comparer.","Pour les ranger au fond, là où il y a de la place."],
+  reflexion:["Pour qu'ils soient vus en premier en entrant.","Pour que le client ait le calme et le temps de comparer.","Pour que le client les achète sans réfléchir."],
+  necessite_city:["Pour faire traverser tout le magasin au client pressé.","Parce que ce sont des produits de luxe.","Pour qu'un client pressé les trouve très vite."],
+  necessite:["Pour que le client passe devant les autres rayons en allant les chercher.","Pour que le client reparte tout de suite.","Parce qu'ils sont en promotion."],
+  essai:["Pour que personne ne l'abîme.","Pour que les clients le voient et puissent toucher et essayer les produits.","Parce qu'il prend beaucoup de place."],
+  ambiance:["Pour que le client sente l'odeur et entende le son dès l'entrée.","Pour cacher la fontaine au fond du magasin.","Parce que la tisane doit rester au chaud."],
+  bacs:["Pour que le client les cherche longtemps.","Parce que ce sont des produits de première nécessité.","Pour que le client découvre les trouvailles en passant."],
+  chemin:["Pour que le client choisisse son propre chemin.","Pour que le client passe devant tous les rayons avant d'arriver à la caisse.","Pour que le client sorte le plus vite possible."],
+  frais:["Pour donner une image de fraîcheur et attirer l'œil dès l'entrée.","Pour que les fruits restent au frais au fond.","Parce que ce sont des produits de réflexion."],
+  piece:["Pour ranger les meubles qui ne se vendent pas.","Pour que le client ne s'y arrête pas.","Pour que le client s'imagine le meuble chez lui."],
+  coeur:["Pour vider le stock.","Pour donner envie au client d'avancer dans le magasin.","Pour que le client reste près de l'entrée."]
+};
+const BONNE_RAISON = {caisse:1, appel:2, impulsion:0, reflexion:1, necessite_city:2, necessite:0, essai:1, ambiance:0, bacs:2, chemin:1, frais:0, piece:2, coeur:1};
+const cleRaison = et => (et.id==='necessite' && etat.enseigne==='city') ? 'necessite_city' : et.id;
+const raisonJuste = (et, ch) => ch.raison !== undefined && ch.raison === BONNE_RAISON[cleRaison(et)];
+
+/* ----- Fiche d'un emplacement et retour immédiat ----- */
+function zoneAutour(b, carte){
+  const cpt = {c:0,t:0,f:0};
+  for(let y=Math.floor(b.y)-1; y<=Math.ceil(b.y+b.h); y++) for(let x=Math.floor(b.x)-1; x<=Math.ceil(b.x+b.w); x++){ const v = carte[x+','+y]; if(v) cpt[v]++; }
+  return cpt.c >= cpt.f && cpt.c >= cpt.t ? 'c' : (cpt.f >= cpt.t ? 'f' : 't');
+}
+function marcheJusqua(b, marche){
+  let best = Infinity;
+  for(let y=Math.floor(b.y)-1;y<=Math.ceil(b.y+b.h);y++) for(let x=Math.floor(b.x)-1;x<=Math.ceil(b.x+b.w);x++)
+    if(y>=0&&y<H&&x>=0&&x<L) best = Math.min(best, marche[y][x]);
+  return best;
+}
+function ficheEmplacement(s, etId){
+  const c = centre(s), P = planEtat();
+  const f = [];
+  f.push(s.ilot ? 'Grand îlot au milieu' : (s.mur ? 'Contre un mur' : (s.haut ? 'Grande gondole qui guide le passage' : 'Meuble au milieu du passage')));
+  f.push(c.y > 9 ? "À l'avant, près de l'entrée" : (c.y > 5.5 ? 'Au milieu du magasin' : 'Au fond du magasin'));
+  f.push(c.x < 7 ? 'Côté gauche' : (c.x > 13 ? 'Côté droit' : 'Au centre'));
+  f.push(`À environ ${Math.round(dist(c, ENTREE))} m de l'entrée`);
+  const bc = boiteCaisse();
+  if(bc && etId!=='caisse' && s.n) f.push(distBoite(centre(bc), s) <= 4 ? 'Juste à côté de la caisse' : 'Loin de la caisse');
+  return f;
+}
+function verdictEtape(et){
+  const P = planEtat();
+  if(et.id==='caisse'){ const b = boiteCaisse(); if(!b) return null;
+    return dist(centre(b), ENTREE) <= 7 && !croiseB(b, ZONE_PORTE); }
+  const n = P.choix[et.id]?.slot; if(!n) return null;
+  const s = emp(n), c = centre(s), {zones:base, marche} = calculerZones(false);
+  const bc = boiteCaisse();
+  switch(et.id){
+    case 'appel':     return zoneAutour(s, base) !== 'c';
+    case 'impulsion': return bc ? distBoite(centre(bc), s) <= 4 : null;
+    case 'reflexion': return dist(c, ENTREE) >= 6.5;
+    case 'necessite': return etat.enseigne==='city' ? marcheJusqua(s, marche) <= 12 : zoneAutour(s, base) !== 'c';
+    case 'essai': case 'bacs': case 'coeur': return zoneAutour(s, base) !== 'f';
+    case 'ambiance': case 'frais': return dist(c, ENTREE) <= 7;
+    case 'services':  return marcheJusqua(s, marche) <= 12;
+    default: return true;
+  }
+}
+
+/* ----- Panneau des étapes ----- */
+function etapeValide(et){
+  const P = planEtat(), ch = P.choix[et.id] || {};
+  if(et.type==='place') return !!ch.slot && raisonJuste(et, ch);
+  if(et.type==='caisse') return !!P.caisse && raisonJuste(et, ch);
+  if(et.type==='chemin') return P.chemin.length >= 3 && raisonJuste(et, ch);
+  return true;
+}
+function allerA(i){
+  if(vue==='3d') basculerVue('2d');
+  const P = planEtat(), etapes = etapesPlan();
+  P.etape = Math.max(0, Math.min(i, etapes.length-1));
+  if(etapes[P.etape].type!=='verif') montrerIndice = false;
+  sauver(); dessinerPlan(); dessinerPanneau(); dessinerVerif();
+}
+function dessinerPanneau(){
+  const z = document.getElementById('panneauPlan'); if(!z) return;
+  const P = planEtat(), etapes = etapesPlan();
+  if(P.etape >= etapes.length) P.etape = etapes.length-1;
+  const et = etapes[P.etape], ch = P.choix[et.id] || (P.choix[et.id] = {pq:''});
+  const e = ENSEIGNES[etat.enseigne];
+  const valide = etapeValide(et);
+  const kids = [
+    el('p',{class:'progression', style:'margin:0'}, `Étape ${P.etape+1} sur ${etapes.length}`,
+      el('span',{class:'barre', style:'display:block'}, el('span',{style:`display:block;height:100%;background:var(--vert);width:${Math.round((P.etape+1)/etapes.length*100)}%`}))),
+    el('h3',{class:'question'}, et.q),
+    el('p',{class:'aide', style:'margin:0'}, et.aide)
+  ];
+  if(et.ex) kids.push(el('div',{class:'exemple'}, el('strong',{}, `Chez ${e.nom}, par exemple : `), et.ex+'.'));
+  if(et.regle) kids.push(el('div',{class:'regle'}, el('span',{class:'etiquette'}, 'La règle du pro'), el('p',{}, et.regle)));
+  if(et.regarder) kids.push(el('div',{class:'regarder'}, el('strong',{}, 'Pour choisir, regardez :'),
+    el('ul',{}, et.regarder.map(x=>el('li',{}, x)))));
+  if(et.type==='place'){
+    const s = ch.slot && emp(ch.slot);
+    kids.push(el('div',{class:'choix-emp'+(s?' fait':'')},
+      s ? [el('strong',{}, `Emplacement ${s.n} — ${s.nom}`), el('ul',{class:'fiche'}, ficheEmplacement(s, et.id).map(x=>el('li',{}, x)))]
+        : (et.ilot ? 'Cliquez sur un des grands îlots en rose sur le plan.' : 'Cliquez sur un emplacement en rose sur le plan.')));
+    const v = verdictEtape(et);
+    if(v === true) kids.push(el('div',{class:'retour ok'}, '✅ Votre choix respecte la règle.'));
+    else if(v === false) kids.push(el('div',{class:'retour'}, '⚠️ '+(et.conseil || 'Relisez la règle.')+' Vous pouvez cliquer sur un autre emplacement.'));
+  }
+  if(et.type==='caisse'){
+    const b = boiteCaisse();
+    kids.push(el('div',{class:'choix-emp'+(b?' fait':'')},
+      b ? [el('strong',{}, 'Caisse posée'), el('ul',{class:'fiche'}, ficheEmplacement(b, 'caisse').map(x=>el('li',{}, x)))]
+        : 'Cliquez sur un espace libre du sol pour poser la caisse.'));
+    if(erreurCaisse) kids.push(el('div',{class:'retour'}, '⚠️ '+erreurCaisse));
+    if(b) kids.push(el('button',{class:'btn petit', type:'button', onclick:()=>placerCaisse(centre(b), P.caisse.r?0:1)}, '↻ Tourner la caisse'));
+    const v = verdictEtape(et);
+    if(v === true) kids.push(el('div',{class:'retour ok'}, '✅ Votre choix respecte la règle.'));
+    else if(v === false) kids.push(el('div',{class:'retour'}, '⚠️ '+(croiseB(b, ZONE_PORTE) ? "La caisse bloque la porte." : et.conseil)+' Cliquez ailleurs pour la déplacer.'));
+  }
+  if(et.type==='chemin'){
+    kids.push(el('div',{class:'choix-emp'+(P.chemin.length>=3?' fait':'')}, `${P.chemin.length} point${P.chemin.length>1?'s':''} tracé${P.chemin.length>1?'s':''}`),
+      el('div',{class:'ligne-btn'},
+        el('button',{class:'btn petit', type:'button', onclick:()=>{ P.chemin.pop(); sauver(); dessinerPlan(); dessinerPanneau(); }}, 'Annuler le dernier point'),
+        el('button',{class:'btn petit rose', type:'button', onclick:()=>{ P.chemin=[]; sauver(); dessinerPlan(); dessinerPanneau(); }}, 'Tout effacer')));
+  }
+  if(et.type==='place' || et.type==='chemin' || et.type==='caisse'){
+    const liste = RAISONS[cleRaison(et)] || [];
+    kids.push(el('div',{class:'raisons', role:'radiogroup', 'aria-label':'Pourquoi ce choix ?'},
+      el('strong',{}, 'Pourquoi ce choix ? Cliquez sur la bonne raison.'),
+      liste.map((t,k)=>el('button',{class:'raison'+(ch.raison===k ? (k===BONNE_RAISON[cleRaison(et)]?' juste':' fausse') : ''), type:'button', role:'radio', 'aria-checked':String(ch.raison===k), onclick:()=>{ ch.raison = k; sauver(); dessinerPanneau(); }}, t))));
+    if(ch.raison !== undefined) kids.push(raisonJuste(et, ch)
+      ? el('div',{class:'retour ok'}, '✅ C\'est la bonne raison. Retenez-la pour votre oral.')
+      : el('div',{class:'retour'}, '⚠️ Ce n\'est pas la bonne raison. Relisez la règle du pro.'));
+  }
+  if(et.type==='zones'){
+    const b = (v, t) => el('button',{class:'mode', type:'button', 'aria-pressed':String(pinceau===v), onclick:()=>{ pinceau=v; dessinerPanneau(); }}, t);
+    kids.push(el('div',{class:'modes'}, b('c','🔴 Zone chaude'), b('f','🔵 Zone froide'), b('x','Gomme')),
+      el('button',{class:'btn petit rose', type:'button', onclick:()=>{ P.zones={}; resultats=null; sauver(); dessinerPlan(); }}, 'Effacer mes zones'));
+  }
+  if(et.type==='verif') kids.push(el('p',{class:'aide', style:'margin:0'}, 'Les résultats de la vérification sont sous le plan.'));
+  kids.push(el('div',{class:'ligne-btn nav-etapes'},
+    el('button',{class:'btn', type:'button', disabled:P.etape===0, onclick:()=>allerA(P.etape-1)}, 'Précédent'),
+    P.etape < etapes.length-1 ? el('button',{class:'btn plein', id:'btnSuivant', type:'button', disabled:!valide, onclick:()=>allerA(P.etape+1)}, 'Suivant') : null));
+  if(!valide && (et.type==='place'||et.type==='chemin'||et.type==='caisse')) kids.push(el('p',{class:'note', style:'margin:0'},
+    et.type==='caisse' ? 'Pour continuer : posez la caisse et choisissez la bonne raison.' : et.type==='place' ? 'Pour continuer : choisissez un emplacement et la bonne raison.' : 'Pour continuer : tracez au moins 3 points et choisissez la bonne raison.'));
+  // liste des étapes
+  const atteinte = i => etapes.slice(0,i).every(etapeValide);
+  kids.push(el('ol',{class:'liste-etapes'}, etapes.map((x,i)=>
+    el('li',{class:(i===P.etape?'courante ':'')+(etapeValide(x)&&i<P.etape?'faite':'')},
+      el('button',{type:'button', disabled:!atteinte(i), onclick:()=>allerA(i)}, x.label || x.q)))));
+  z.replaceChildren(...kids);
+}
+
+/* ----- Vérification (sous le plan) ----- */
+function dessinerVerif(){
+  const z = document.getElementById('verifPlan'); if(!z) return;
+  const P = planEtat(), et = etapesPlan()[P.etape];
+  if(et.type!=='verif'){ z.classList.add('cache'); return; }
+  z.classList.remove('cache');
+  z.replaceChildren(...[
+    el('div',{class:'verif-tete'},
+      el('span',{class:'etiquette', style:'margin:0'}, 'Vérification'),
+      el('button',{class:'btn plein', type:'button', onclick:()=>{ resultats = verifierPlan(); P.verifs = (P.verifs||0)+1; sauver(); dessinerVerif(); }}, 'Vérifier mon plan'),
+      el('button',{class:'btn', type:'button', 'aria-pressed':String(montrerIndice), onclick:()=>{ montrerIndice=!montrerIndice; dessinerPlan(); dessinerVerif(); }},
+        montrerIndice ? "Masquer l'indice" : '💡 Indice : voir les zones de mon plan')),
+    montrerIndice ? el('p',{class:'note', style:'margin:0 0 10px'}, "En couleur pleine : les zones chaudes (rouge) et froides (bleu) calculées à partir de votre aménagement. Vos prévisions sont entourées.") : null,
+    resultats ? el('ul',{class:'messages'}, resultats.map(r=>
+      el('li',{class:r.ok?'ok':''}, el('span',{class:'ic','aria-hidden':'true'}, r.score?'🎯':(r.ok?'✅':'❓')), el('span',{class:r.score?'score':''}, r.t))))
+      : el('p',{style:'margin:0'}, "Cliquez sur « Vérifier mon plan ». Vous pouvez revenir aux étapes, changer un choix et vérifier à nouveau.")
+  ].filter(Boolean));
+}
+
+/* =========================================================
+   VUE 3D DU MAGASIN
+   ========================================================= */
+let vue = '2d', trois = null;
+function chargerThree(){
+  return new Promise((ok, ko)=>{
+    if(window.THREE) return ok();
+    const sc = document.createElement('script');
+    sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+    sc.onload = ok; sc.onerror = ko; document.head.append(sc);
+  });
+}
+const LUMIERES_3D = {
+  'Chaude':{c:0xffd9a8, i:.95}, 'Froide':{c:0xdce9ff, i:1}, 'Tamisée':{c:0xffe2bd, i:.6},
+  'Vive':{c:0xffffff, i:1.25}, 'Naturelle':{c:0xfff6ea, i:1.05}
+};
+function etiquette3D(texte, fond){
+  const cv = document.createElement('canvas'); cv.width = 512; cv.height = 128;
+  const x = cv.getContext('2d');
+  x.font = "700 44px Lexend, 'Segoe UI', Arial, sans-serif";
+  const l = Math.min(500, x.measureText(texte).width + 40);
+  x.fillStyle = fond || 'rgba(255,255,255,.92)';
+  x.beginPath(); x.roundRect ? x.roundRect((512-l)/2, 24, l, 80, 24) : x.rect((512-l)/2, 24, l, 80); x.fill();
+  x.fillStyle = fond ? '#ffffff' : '#1d2a24'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(texte, 256, 66, 480);
+  const t = new THREE.CanvasTexture(cv);
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({map:t, depthTest:false, transparent:true}));
+  sp.scale.set(4.4, 1.1, 1); sp.renderOrder = 10;
+  return sp;
+}
+function construireScene(){
+  const T = THREE, scene = new T.Scene();
+  scene.background = new T.Color(0xeef3f0);
+  const m = etat.mood;
+  const lum = LUMIERES_3D[m.lumiere] || {c:0xffffff, i:.95};
+  scene.add(new T.HemisphereLight(0xffffff, 0x8a8a8a, .55*lum.i));
+  const dir = new T.DirectionalLight(lum.c, .75*lum.i); dir.position.set(6, 14, 18); scene.add(dir);
+  const plaf = new T.PointLight(lum.c, .5*lum.i, 30); plaf.position.set(10, 3, 7.5); scene.add(plaf);
+
+  const mat = (c, o={}) => new T.MeshLambertMaterial({color:new T.Color(c), ...o});
+  // sol
+  const sol = new T.Mesh(new T.PlaneGeometry(L, H), mat(m.sol || '#efe9dc'));
+  sol.rotation.x = -Math.PI/2; sol.position.set(L/2, 0, H/2); scene.add(sol);
+  // murs visibles de l'intérieur seulement (on voit à travers depuis l'extérieur)
+  const HM = 3, murMat = mat(m.murs || '#f3efe6', {side:T.FrontSide});
+  const mur = (x1,z1,x2,z2,y0=0,h=HM,materiau=murMat) => {
+    const lg = Math.hypot(x2-x1, z2-z1); if(lg <= 0) return;
+    const p = new T.Mesh(new T.PlaneGeometry(lg, h), materiau);
+    p.position.set((x1+x2)/2, y0+h/2, (z1+z2)/2);
+    p.rotation.y = Math.atan2(-(z2-z1), x2-x1);
+    scene.add(p);
+  };
+  mur(0,0, L,0);          // fond (face visible tournée vers l'intérieur)
+  mur(0,H, 0,0);          // gauche
+  mur(L,0, L,H);          // droite
+  // façade : piliers, vitrines vitrées, porte
+  const verre = mat('#bfe3e8', {transparent:true, opacity:.25, side:T.DoubleSide});
+  const segs = [[0,.5,'mur'],[.5,7.5,'vitrine'],[7.5,8.5,'mur'],[8.5,11.5,'porte'],[11.5,12.5,'mur'],[12.5,19.5,'vitrine'],[19.5,20,'mur']];
+  for(const [a,b,t] of segs){
+    if(t==='mur') mur(b,H, a,H);
+    if(t==='vitrine'){ mur(b,H, a,H, 0,.5); mur(b,H, a,H, .5,2.1, verre); mur(b,H, a,H, 2.6,.4); }
+    if(t==='porte') mur(b,H, a,H, 2.4,.6);
+  }
+  // réserve
+  const res = new T.Mesh(new T.BoxGeometry(RESERVE.w, HM, RESERVE.h), mat('#cfd6d2'));
+  res.position.set(RESERVE.x+RESERVE.w/2, HM/2, RESERVE.y+RESERVE.h/2); scene.add(res);
+  const eres = etiquette3D('Réserve'); eres.position.set(RESERVE.w/2, HM+.3, RESERVE.h/2); scene.add(eres);
+  // meubles
+  const palette = m.couleurs.length ? m.couleurs : ['#c8cfcb'];
+  meublesPlan().forEach((mb, i)=>{
+    const s = mb.box, emp_ = emps().find(e=>e.n===mb.slot) || {};
+    const haut = mb.id==='caisse' ? 1.05 : (mb.haut ? 1.9 : (emp_.ilot ? .75 : 1));
+    const couleur = mb.autre ? palette[i % palette.length] : mb.c;
+    const boite = new T.Mesh(new T.BoxGeometry(s.w, haut, s.h), mat(couleur));
+    boite.position.set(s.x+s.w/2, haut/2, s.y+s.h/2); scene.add(boite);
+    const arete = new T.LineSegments(new T.EdgesGeometry(boite.geometry), new T.LineBasicMaterial({color:0x33413a}));
+    arete.position.copy(boite.position); scene.add(arete);
+    const et = etiquette3D(mb.label, mb.fam ? FAMILLES[mb.fam].couleur+'ee' : null);
+    et.position.set(s.x+s.w/2, haut+.45, s.y+s.h/2); scene.add(et);
+  });
+  // chemin du client
+  const ch = planEtat().chemin;
+  if(ch.length > 1){
+    const pts = ch.map(p=>new T.Vector3(p.x, .03, p.y));
+    scene.add(new T.Line(new T.BufferGeometry().setFromPoints(pts), new T.LineBasicMaterial({color:0x1b6b46})));
+  }
+  return scene;
+}
+async function afficher3D(){
+  const zone = document.getElementById('zone3d'); if(!zone) return;
+  zone.replaceChildren(el('p',{class:'aide', style:'padding:20px'}, 'Chargement de la vue 3D…'));
+  try{ await chargerThree(); }
+  catch(e){ zone.replaceChildren(el('div',{class:'vide'}, "La vue 3D n'a pas pu se charger. Vérifiez la connexion à Internet, puis réessayez.")); return; }
+  const T = THREE;
+  const largeur = zone.clientWidth || 800, hauteur = Math.round(largeur*.62);
+  let renderer;
+  try{ renderer = new T.WebGLRenderer({antialias:true, preserveDrawingBuffer:true}); }
+  catch(e){ zone.replaceChildren(el('div',{class:'vide'}, "Cet ordinateur n'affiche pas la 3D (WebGL indisponible). Utilisez la vue 2D.")); return; }
+  renderer.setPixelRatio(Math.min(2, window.devicePixelRatio||1));
+  renderer.setSize(largeur, hauteur);
+  const scene = construireScene();
+  const cam = new T.PerspectiveCamera(55, largeur/hauteur, .1, 200);
+  // caméra orbitale autour du centre du magasin
+  const cible = new T.Vector3(L/2, 0, H/2);
+  const orb = {az:.35, el:.85, d:24};
+  let mode = 'orbite', client = {yaw:0, x:ENTREE.x, z:H+.8};
+  const etiquettes = scene.children.filter(o=>o.isSprite);
+  const placer = () => {
+    etiquettes.forEach(e=>e.scale.set(mode==='orbite'?4.4:2.4, mode==='orbite'?1.1:.6, 1));
+    if(mode==='orbite'){
+      cam.position.set(cible.x + orb.d*Math.cos(orb.el)*Math.sin(orb.az), orb.d*Math.sin(orb.el), cible.z + orb.d*Math.cos(orb.el)*Math.cos(orb.az));
+      cam.lookAt(cible); cam.fov = 55;
+    } else {
+      cam.position.set(client.x, 1.6, client.z);
+      cam.lookAt(client.x + Math.sin(client.yaw)*-10, 1.35, client.z - Math.cos(client.yaw)*10); cam.fov = 70;
+    }
+    cam.updateProjectionMatrix(); renderer.render(scene, cam);
+  };
+  placer();
+  const cv = renderer.domElement; cv.className = 'canvas3d'; cv.tabIndex = 0;
+  cv.setAttribute('aria-label', 'Vue 3D du magasin. Faites glisser pour tourner.');
+  let drag = null;
+  cv.addEventListener('pointerdown', ev=>{ drag = {x:ev.clientX, y:ev.clientY}; cv.setPointerCapture(ev.pointerId); });
+  cv.addEventListener('pointermove', ev=>{
+    if(!drag) return;
+    const dx = ev.clientX-drag.x, dy = ev.clientY-drag.y; drag = {x:ev.clientX, y:ev.clientY};
+    if(mode==='orbite'){ orb.az -= dx*.008; orb.el = Math.min(1.45, Math.max(.15, orb.el + dy*.006)); }
+    else client.yaw = Math.max(-1.3, Math.min(1.3, client.yaw + dx*.005));
+    placer();
+  });
+  cv.addEventListener('pointerup', ()=>drag=null);
+  cv.addEventListener('wheel', ev=>{ if(mode!=='orbite') return; ev.preventDefault(); orb.d = Math.min(40, Math.max(8, orb.d + ev.deltaY*.02)); placer(); }, {passive:false});
+  cv.addEventListener('keydown', ev=>{
+    const k = ev.key;
+    if(mode==='orbite'){
+      if(k==='ArrowLeft') orb.az += .1; else if(k==='ArrowRight') orb.az -= .1;
+      else if(k==='ArrowUp') orb.el = Math.min(1.45, orb.el+.08); else if(k==='ArrowDown') orb.el = Math.max(.15, orb.el-.08); else return;
+    } else {
+      if(k==='ArrowLeft') client.yaw -= .1; else if(k==='ArrowRight') client.yaw += .1; else return;
+    }
+    ev.preventDefault(); placer();
+  });
+  const btn = (t, f, actif) => el('button',{class:'mode', type:'button', 'aria-pressed':String(!!actif), onclick:ev=>{
+    ev.target.parentNode.querySelectorAll('.mode').forEach(b=>b.setAttribute('aria-pressed', String(b===ev.target))); f(); placer(); }}, t);
+  const barre = el('div',{class:'modes'},
+    btn("Vue d'ensemble", ()=>{ mode='orbite'; orb.az=.35; orb.el=.85; orb.d=24; }, true),
+    btn('Vue de dessus', ()=>{ mode='orbite'; orb.az=0; orb.el=1.45; orb.d=22; }),
+    btn('👁️ Entrer comme un client', ()=>{ mode='client'; client.yaw=0; }));
+  const E = etat.enseigne;
+  const question = {
+    nd:"Depuis l'entrée, le client est-il invité à se promener ? Voit-il la fontaine et le coin tisane ?",
+    normal:"Depuis l'entrée, le client voit-il par où avancer ? Peut-il échapper au parcours ?",
+    city:"Depuis l'entrée, que voit le client en premier ? Est-ce le frais, comme le demande le brief ?",
+    mdm:"Depuis l'entrée, voit-on jusqu'au fond du magasin ? Qu'est-ce qui attire le regard ?"
+  }[E];
+  zone.replaceChildren(barre, cv,
+    el('p',{class:'note', style:'margin:6px 0 0'}, "Faites glisser pour tourner, molette pour zoomer. En vue client, faites glisser pour regarder à gauche ou à droite."),
+    question ? el('div',{class:'regle', style:'margin-top:10px'}, el('span',{class:'etiquette'}, 'Mettez-vous à la place du client'), el('p',{}, question)) : null
+  );
+  trois = {renderer, scene, cam};
+}
+function basculerVue(v){
+  vue = v;
+  const svg = document.getElementById('svgPlan'), leg = document.querySelector('.legende-plan'), z = document.getElementById('zone3d');
+  if(!svg || !z) return;
+  svg.classList.toggle('cache', v==='3d'); leg && leg.classList.toggle('cache', v==='3d'); z.classList.toggle('cache', v!=='3d');
+  document.querySelectorAll('.bascule-vue .mode').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.v===v)));
+  if(v==='3d') afficher3D();
+  else if(trois){ trois.renderer.dispose(); trois = null; }
+}
+
+function pagePlan(){
+  if(!etat.enseigne) return el('div',{class:'vide'}, "Choisissez d'abord votre enseigne dans l'onglet « Mon enseigne ».");
+  const e = ENSEIGNES[etat.enseigne];
+  const svg = sv('svg',{id:'svgPlan', class:'plan', viewBox:`-0.4 -0.4 ${L+.8} ${H+2}`, role:'img', 'aria-label':'Plan du magasin vu de dessus'});
+  installerInteractions(svg);
+  const page = el('section',{},
+    el('h2',{}, 'Le plan de votre magasin — '+e.nom),
+    el('div',{class:'exigences', style:'margin:0 0 14px'},
+      el('span',{class:'etiquette'}, 'Rappel du brief'),
+      el('ul',{}, e.exigences.map(x=>el('li',{},x)))),
+    el('div',{class:'atelier'},
+      el('div',{},
+        el('div',{class:'modes bascule-vue', role:'group', 'aria-label':'Type de vue'},
+          el('button',{class:'mode', type:'button', 'data-v':'2d', 'aria-pressed':'true', onclick:()=>basculerVue('2d')}, 'Plan 2D'),
+          el('button',{class:'mode', type:'button', 'data-v':'3d', 'aria-pressed':'false', onclick:()=>basculerVue('3d')}, 'Vue 3D')),
+        el('div',{class:'cadre-plan'}, svg, el('div',{id:'zone3d', class:'cache'}),
+          el('div',{class:'legende-plan'},
+            Object.values(FAMILLES).map(f=>el('span',{}, el('i',{class:'pastille', style:`background:${f.couleur}`}, f.lettre), f.nom)),
+            el('span',{}, 'Bordure épaisse : meuble haut'))),
+        el('div',{class:'verif cache', id:'verifPlan'})),
+      el('aside',{class:'panneau', id:'panneauPlan', 'aria-live':'polite'}))
+  );
+  vue = '2d'; trois = null;
+  setTimeout(()=>{ dessinerPlan(); dessinerPanneau(); dessinerVerif(); });
+  return page;
+}
+
+/* =========================================================
+   SIGNALÉTIQUE ET PRIX (séance 5)
+   ========================================================= */
+const S5 = {
+  city:{etiq:{nom:'Café moulu pur arabica', qte:'250 g', prix:2.90, q:.25, unite:'kg'}},
+  normal:{etiq:{nom:'Gel douche', qte:'250 ml', prix:1.49, q:.25, unite:'L'}},
+  nd:{etiq:{nom:'Tisane bio', qte:'100 g', prix:6.90, q:.1, unite:'kg'}},
+  mdm:{etiq:{nom:'Diffuseur de parfum', qte:'100 ml', prix:14.90, q:.1, unite:'L'}}
+};
+const GONDOLES = {
+  city:{nom:'Petit-déjeuner', rangs:[['Café moulu','Thé noir','Chicorée','Cacao'],['Confiture','Miel','Pâte à tartiner','Compote'],['Céréales','Muesli','Biscottes','Pain de mie'],["Jus d'orange",'Lait','Brioche','Madeleines']]},
+  normal:{nom:'Soins du corps', rangs:[['Gel douche','Shampoing','Après-shampoing','Masque'],['Déodorant','Dentifrice','Bain de bouche','Brosse à dents'],['Savon','Crème mains','Lait corps','Huile'],['Cotons','Lingettes','Coton-tiges','Mouchoirs']]},
+  nd:{nom:'Bien-être', rangs:[['Tisane','Thé vert','Infusion','Rooibos'],['Bougie','Encens','Diffuseur','Huile essentielle'],['Huile de massage','Baume','Galet','Bouillotte'],['Miel','Savon','Bain moussant','Sels de bain']]},
+  mdm:{nom:'Arts de la table', rangs:[['Diffuseur','Bougie','Bougeoir','Photophore'],['Mug','Assiette','Bol','Tasse'],['Savon liquide','Porte-savon','Serviettes','Plateau'],['Plaid','Coussin','Panier','Vase']]}
+};
+/* Mise à jour de l'affichage demandée par la direction */
+const MAJ = {
+  city:  {type:'promo', rang:2, pos:0, produit:'Céréales 500 g', ref:3.60, taux:25, debut:'12 janvier', fin:'26 janvier'},
+  nd:    {type:'promo', rang:1, pos:2, produit:'Diffuseur de parfum', ref:24.00, taux:20, debut:'12 janvier', fin:'26 janvier'},
+  mdm:   {type:'promo', rang:3, pos:0, produit:'Plaid en coton', ref:30.00, taux:30, debut:'12 janvier', fin:'26 janvier'},
+  normal:{type:'prix', rang:0, pos:0, produit:'Gel douche 250 ml', ancien:1.49, nouveau:1.29, q:.25, unite:'L'}
+};
+/* Contrôle de rayon : 6 produits, dont 4 anomalies. Nous sommes le 20 janvier. */
+const TYPES_ANOM = {manquante:'Étiquette manquante', correspond:'Étiquette qui ne correspond pas au produit', unite:'Prix au kilo ou au litre faux', promo:'Promotion terminée ou affichée à tort'};
+const CONTROLE = {
+  city:[
+    {r:0,p:0, prod:'Café moulu', etq:{nom:'Café moulu 250 g', prix:'2,90 €', u:'11,60 € le kg'}},
+    {r:0,p:1, prod:'Thé noir', etq:null, a:'manquante'},
+    {r:0,p:2, prod:'Confiture', etq:{nom:'Miel toutes fleurs 500 g', prix:'4,50 €', u:'9,00 € le kg'}, a:'correspond'},
+    {r:1,p:0, prod:'Muesli', etq:{nom:'Muesli 500 g', prix:'3,00 €', u:'3,00 € le kg'}, a:'unite'},
+    {r:1,p:1, prod:'Biscottes', etq:{nom:'Biscottes 300 g', prix:'1,80 €', u:'6,00 € le kg'}, stop:'-20 % jusqu\u2019au 10/01', a:'promo'},
+    {r:1,p:2, prod:"Jus d'orange", etq:{nom:"Jus d'orange 1 L", prix:'1,95 €', u:'1,95 € le L'}}],
+  normal:[
+    {r:0,p:0, prod:'Gel douche', etq:{nom:'Gel douche 250 ml', prix:'1,49 €', u:'5,96 € le L'}},
+    {r:0,p:1, prod:'Shampoing', etq:null, a:'manquante'},
+    {r:0,p:2, prod:'Déodorant', etq:{nom:'Dentifrice 75 ml', prix:'1,19 €', u:'15,87 € le L'}, a:'correspond'},
+    {r:1,p:0, prod:'Savon', etq:{nom:'Savon 4 x 100 g', prix:'2,00 €', u:'2,00 € le kg'}, a:'unite'},
+    {r:1,p:1, prod:'Cotons', etq:{nom:'Cotons x 80', prix:'0,89 €', u:''}, stop:'PROMO -30 %', a:'promo'},
+    {r:1,p:2, prod:'Crème mains', etq:{nom:'Crème mains 75 ml', prix:'1,99 €', u:'26,53 € le L'}}],
+  nd:[
+    {r:0,p:0, prod:'Tisane', etq:{nom:'Tisane bio 100 g', prix:'6,90 €', u:'69,00 € le kg'}},
+    {r:0,p:1, prod:'Bougie', etq:null, a:'manquante'},
+    {r:0,p:2, prod:'Huile de massage', etq:{nom:'Encens, 20 bâtons', prix:'4,90 €', u:''}, a:'correspond'},
+    {r:1,p:0, prod:'Miel', etq:{nom:'Miel de lavande 250 g', prix:'8,00 €', u:'8,00 € le kg'}, a:'unite'},
+    {r:1,p:1, prod:'Diffuseur', etq:{nom:'Diffuseur 100 ml', prix:'24,00 €', u:'240,00 € le L'}, stop:'Noël -15 % jusqu\u2019au 31/12', a:'promo'},
+    {r:1,p:2, prod:'Savon', etq:{nom:'Savon au lait 100 g', prix:'5,50 €', u:'55,00 € le kg'}}],
+  mdm:[
+    {r:0,p:0, prod:'Diffuseur', etq:{nom:'Diffuseur 100 ml', prix:'14,90 €', u:'149,00 € le L'}},
+    {r:0,p:1, prod:'Bougie', etq:null, a:'manquante'},
+    {r:0,p:2, prod:'Mug', etq:{nom:'Assiette plate 27 cm', prix:'6,99 €', u:''}, a:'correspond'},
+    {r:1,p:0, prod:'Savon liquide', etq:{nom:'Savon liquide 300 ml', prix:'6,00 €', u:'6,00 € le L'}, a:'unite'},
+    {r:1,p:1, prod:'Plaid', etq:{nom:'Plaid en coton', prix:'30,00 €', u:''}, stop:'Soldes -40 % jusqu\u2019au 09/01', a:'promo'},
+    {r:1,p:2, prod:'Coussin', etq:{nom:'Coussin 45 x 45', prix:'12,99 €', u:''}}]
+};
+const MENTIONS_ETIQ = [
+  {id:'nom', t:'La dénomination du produit et sa quantité', ok:true},
+  {id:'prix', t:'Le prix de vente TTC', ok:true},
+  {id:'unite', t:'Le prix au kilo ou au litre', ok:true},
+  {id:'achat', t:"Le prix d'achat payé au fournisseur", ok:false},
+  {id:'marge', t:'La marge du magasin', ok:false},
+  {id:'livraison', t:'La date de livraison', ok:false}
+];
+const MENTIONS_PROMO = [
+  {id:'reference', t:'Le prix de référence (ancien prix), barré', ok:true},
+  {id:'nouveau', t:'Le nouveau prix', ok:true},
+  {id:'reduction', t:'La réduction (en %)', ok:true},
+  {id:'dates', t:"Les dates de l'opération", ok:true},
+  {id:'achat', t:"Le prix d'achat du magasin", ok:false},
+  {id:'concurrent', t:'Le prix pratiqué par un concurrent', ok:false}
+];
+const TRI_ILV = [
+  {t:'Le panneau « Hygiène » au-dessus du rayon', r:'ILV'},
+  {t:"L'étiquette prix sur le rayon", r:'ILV'},
+  {t:'Le stop-rayon « Nouveau ! » d\u2019une marque', r:'PLV'},
+  {t:'Le kakemono d\u2019une marque de café', r:'PLV'},
+  {t:'La flèche de parcours au sol', r:'ILV'}
+];
+const ELEMENTS = {
+  panneau:  {nom:'Panneau de rayon', type:'ILV', zones:['fronton'], mauvais:"Le panneau de rayon se place en haut de la gondole, sur le fronton, pour être vu de loin."},
+  etiquette:{nom:'Étiquettes prix', type:'ILV', zones:['reglette'], mauvais:"Les étiquettes prix se posent sur les réglettes, au bord de chaque étagère, sous les produits."},
+  stop:     {nom:'Stop-rayon', type:'PLV', zones:['reglette'], mauvais:"Le stop-rayon se fixe sur le bord d'une étagère et dépasse dans l'allée pour arrêter le regard."},
+  kakemono: {nom:'Kakemono', type:'PLV', zones:['sol'], mauvais:"Le kakemono est une bannière qui se pose au sol, à côté de la gondole."},
+  presentoir:{nom:'Présentoir de sol', type:'PLV', zones:['sol'], mauvais:"Le présentoir de sol se pose au sol, à côté de la gondole, sans gêner le passage."}
+};
+
+const s5 = () => { const v = etat.vitrine; v.pq = v.pq || {};
+  v.etiq = v.etiq || {mentions:[], unite:''}; v.tri = v.tri || [];
+  v.rayon = v.rayon || {fronton:false, reglettes:[{},{},{},{}], sol:{g:'', d:''}};
+  v.maj = v.maj || {nouveau:'', unite:'', rang:null, mentions:[]};
+  v.controle = v.controle || {}; v.etape = v.etape || 0; return v; };
+const nombre = t => { const n = parseFloat(String(t).replace(',', '.').replace(/[^\d.]/g,'')); return isNaN(n) ? null : n; };
+const euros = n => n.toFixed(2).replace('.', ',') + ' €';
+const arr2 = n => Math.round(n*100)/100;
+
+function etapesS5(){
+  const E = etat.enseigne, et = S5[E].etiq, M = MAJ[E], uni = et.unite==='kg' ? 'kilo' : 'litre';
+  return [
+    {id:'etiquette', label:"L'étiquette prix", q:`Préparez l'étiquette prix : ${et.nom}, ${et.qte}, vendu ${euros(et.prix)}.`,
+     aide:"L'étiquette prix est une information obligatoire : le client doit connaître le prix avant d'acheter.",
+     regle:`Sur une étiquette, on écrit ce qui est utile au client : le nom du produit et sa quantité, le prix de vente TTC et, pour un produit vendu au poids ou au volume, le prix au ${uni}. Calcul : prix ÷ quantité (en ${et.unite}). Jamais d'information interne au magasin.`,
+     regarder:["Cette information est-elle utile au client ?",`${et.qte}, c'est combien en ${et.unite} ?`]},
+    {id:'rayon', label:'Habiller le rayon', q:`Habillez la gondole « ${GONDOLES[E].nom} » avec l'ILV et la PLV.`,
+     aide:"L'ILV (information sur le lieu de vente) informe et oriente. La PLV (publicité sur le lieu de vente) attire l'attention sur un produit ou une marque.",
+     regle:"Le panneau de rayon se place en haut, sur le fronton. Chaque étagère a ses étiquettes prix sur la réglette. La PLV se place avec mesure : 1 ou 2 éléments maximum (stop-rayon sur une étagère, kakemono ou présentoir au sol à côté de la gondole). Trop de PLV tue la PLV.",
+     regarder:["Le client voit-il de loin de quel rayon il s'agit ?","Toutes les étagères ont-elles leurs étiquettes ?","Ai-je placé 1 ou 2 PLV, pas plus ?"]},
+    M.type==='promo'
+    ? {id:'maj', label:"Mettre à jour l'affichage", q:"La direction lance une opération : mettez à jour l'affichage du rayon.",
+       aide:"L'équipier ne décide pas des promotions : il les applique et les affiche correctement.",
+       regle:"Une étiquette de réduction de prix indique : le prix de référence barré (le prix le plus bas pratiqué dans les 30 derniers jours), le nouveau prix, la réduction et les dates de l'opération. Nouveau prix = prix de référence − (prix de référence × taux ÷ 100). Elle se pose sur la réglette, juste sous le produit concerné.",
+       regarder:["Mon calcul du nouveau prix est-il juste ?","L'étiquette est-elle sous le bon produit ?"]}
+    : {id:'maj', label:"Mettre à jour l'affichage", q:"La direction baisse un prix : mettez à jour l'étiquette du rayon.",
+       aide:"Chez Normal, pas de promotion : quand un prix baisse, il baisse pour de bon. L'équipier change l'étiquette.",
+       regle:`La nouvelle étiquette remplace l'ancienne, sous le produit concerné. Le prix au ${uni} doit être recalculé avec le nouveau prix : nouveau prix ÷ quantité. Pas de prix barré ni de « promo » : c'est le nouveau prix de tous les jours.`,
+       regarder:[`Ai-je recalculé le prix au ${uni} ?`,"L'étiquette est-elle sous le bon produit ?"]},
+    {id:'controle', label:'Contrôler le rayon', q:"Contrôlez ce rayon et signalez les anomalies. Nous sommes le 20 janvier.",
+     aide:"Chaque matin, l'équipier vérifie que l'affichage est exact. S'il trouve une erreur, il la signale à son responsable.",
+     regle:"On vérifie chaque produit : a-t-il une étiquette ? L'étiquette correspond-elle au produit ? Le prix au kilo ou au litre est-il juste ? L'affichage promotionnel est-il encore valable (dates) et autorisé par l'enseigne ?",
+     regarder:["Cliquez sur chaque produit qui pose problème.","Choisissez le type d'anomalie dans la fiche de signalement."]},
+    {id:'bilan', label:'Bilan', q:'Faites le bilan de votre travail.', aide:"Vérifiez que chaque étape est complète. Pensez à enregistrer votre fichier."}
+  ];
+}
+
+/* ----- vérifications ----- */
+function verdictS5(id){
+  const v = s5(), E = etat.enseigne, R = [];
+  const ok = t => R.push({ok:true,t}), q = t => R.push({ok:false,t});
+  if(id==='etiquette'){
+    const ch = new Set(v.etiq.mentions);
+    const manquent = MENTIONS_ETIQ.filter(m=>m.ok && !ch.has(m.id)), trop = MENTIONS_ETIQ.filter(m=>!m.ok && ch.has(m.id));
+    if(manquent.length) q(`Il manque ${manquent.length} mention${manquent.length>1?'s':''} obligatoire${manquent.length>1?'s':''}.`);
+    if(trop.length) q("Une information interne au magasin est sur l'étiquette. Le client en a-t-il besoin ?");
+    if(!manquent.length && !trop.length) ok("Les mentions sont justes.");
+    const et = S5[E].etiq, att = arr2(et.prix/et.q), s = nombre(v.etiq.unite), u = et.unite==='kg'?'kilo':'litre';
+    if(s===null) q(`Calculez le prix au ${u}.`);
+    else if(Math.abs(s-att) > .011) q(`Le prix au ${u} n'est pas juste. Rappel : prix ÷ quantité en ${et.unite}.`);
+    else ok(`Le prix au ${u} est juste : ${euros(att)} le ${et.unite}.`);
+  }
+  if(id==='rayon'){
+    const faux = TRI_ILV.filter((x,i)=>v.tri[i]!==x.r).length;
+    if(v.tri.filter(Boolean).length < TRI_ILV.length) q("Terminez le tri ILV ou PLV.");
+    else faux ? q(`${faux} réponse${faux>1?'s':''} du tri à revoir. Informe-t-il ou fait-il de la publicité ?`) : ok("Le tri ILV / PLV est juste.");
+    const r = v.rayon;
+    r.fronton ? ok("Le panneau de rayon est en place.") : q("Le client voit-il de loin de quel rayon il s'agit ?");
+    const sansEtiq = r.reglettes.filter(x=>!x.etiq).length;
+    sansEtiq ? q(`${sansEtiq} étagère${sansEtiq>1?'s n\u2019ont':' n\u2019a'} pas d'étiquettes prix.`) : ok("Toutes les étagères ont leurs étiquettes prix.");
+    const nPLV = r.reglettes.filter(x=>x.stop).length + (r.sol.g?1:0) + (r.sol.d?1:0);
+    if(!nPLV) q("Aucune PLV : qu'est-ce qui attire l'œil du client sur ce rayon ?");
+    else if(nPLV>2) q("Plus de 2 PLV sur un seul rayon : trop de PLV tue la PLV.");
+    else ok("La PLV est placée avec mesure.");
+  }
+  if(id==='maj'){
+    const M = MAJ[E], m = v.maj;
+    if(M.type==='promo'){
+      const att = arr2(M.ref*(1-M.taux/100)), s = nombre(m.nouveau);
+      if(s===null) q("Calculez le nouveau prix.");
+      else Math.abs(s-att) > .011 ? q("Le nouveau prix n'est pas juste. Rappel : prix de référence − (prix de référence × taux ÷ 100).") : ok(`Le nouveau prix est juste : ${euros(att)}.`);
+      const ch = new Set(m.mentions);
+      const manquent = MENTIONS_PROMO.filter(x=>x.ok && !ch.has(x.id)), trop = MENTIONS_PROMO.filter(x=>!x.ok && ch.has(x.id));
+      if(manquent.length) q(`Il manque ${manquent.length} mention${manquent.length>1?'s':''} obligatoire${manquent.length>1?'s':''} sur l'étiquette de réduction.`);
+      if(trop.length) q("Une information inutile ou interne est sur l'étiquette. Le client en a-t-il besoin ?");
+      if(!manquent.length && !trop.length) ok("Les mentions de l'étiquette sont complètes.");
+    } else {
+      const att = arr2(M.nouveau/M.q), s = nombre(m.unite);
+      if(s===null) q("Recalculez le prix au litre avec le nouveau prix.");
+      else Math.abs(s-att) > .011 ? q("Le prix au litre n'est pas juste. Rappel : nouveau prix ÷ quantité en litres.") : ok(`Le prix au litre est juste : ${euros(att)} le L.`);
+    }
+    if(m.rang===null) q("Posez l'étiquette sur la réglette du produit concerné.");
+    else m.rang!==M.rang ? q("L'étiquette n'est pas sous le bon produit. Où se trouve-t-il sur la gondole ?") : ok("L'étiquette est sous le bon produit.");
+  }
+  if(id==='controle'){
+    const items = CONTROLE[E], sig = v.controle;
+    const anomalies = items.filter(x=>x.a), trouvees = anomalies.filter(x=>sig[x.r+'-'+x.p]);
+    const fausses = items.filter(x=>!x.a && sig[x.r+'-'+x.p]);
+    trouvees.length < anomalies.length ? q(`Vous avez trouvé ${trouvees.length} anomalie${trouvees.length>1?'s':''} sur ${anomalies.length}. Regardez encore chaque étiquette.`) : ok("Toutes les anomalies sont repérées.");
+    if(fausses.length) q(`${fausses.length} produit${fausses.length>1?'s signalés sont':' signalé est'} pourtant correct${fausses.length>1?'s':''}. Relisez son étiquette.`);
+    const sansType = trouvees.filter(x=>!sig[x.r+'-'+x.p] || sig[x.r+'-'+x.p]===true).length;
+    const mauvaisType = trouvees.filter(x=>typeof sig[x.r+'-'+x.p]==='string' && sig[x.r+'-'+x.p]!==x.a).length;
+    if(sansType) q("Choisissez le type de chaque anomalie dans la fiche de signalement.");
+    else if(mauvaisType) q(`${mauvaisType} type${mauvaisType>1?'s':''} d'anomalie ${mauvaisType>1?'sont':'est'} à revoir.`);
+    else if(trouvees.length) ok("La fiche de signalement est juste.");
+  }
+  return R;
+}
+const etapeS5Valide = et => et.id==='bilan' || verdictS5(et.id).every(r=>r.ok);
+
+/* ----- dessins ----- */
+function texteAjuste(t, x, y, fs, maxL, attrs={}){
+  const n = sv('text',{x, y, 'font-size':fs, ...attrs}, t);
+  if(t.length*fs*.56 > maxL){ n.setAttribute('textLength', maxL); n.setAttribute('lengthAdjust','spacingAndGlyphs'); }
+  return n;
+}
+function codeBarre(x, y, w, h){
+  const g = sv('g',{}); let cx = x, i = 0;
+  while(cx < x+w){ const lg = [.25,.5,.25,.75,.25][i%5]; g.append(sv('rect',{x:cx,y,width:lg,height:h,fill:'#1d2a24'})); cx += lg + [.35,.25,.45,.3][i%4]; i++; }
+  return g;
+}
+function apercuEtiquette(){
+  const v = s5(), et = S5[etat.enseigne].etiq, M = new Set(v.etiq.mentions), g = [];
+  g.push(sv('rect',{x:0,y:0,width:80,height:34,rx:1.5,fill:'#fff',stroke:'#1d2a24','stroke-width':.4}));
+  g.push(sv('rect',{x:0,y:0,width:80,height:4,rx:1.5,fill:'#1b6b46'}));
+  g.push(texteAjuste(ENSEIGNES[etat.enseigne].nom, 3, 3, 2.4, 40, {fill:'#fff','font-weight':700}));
+  if(M.has('nom')){ g.push(texteAjuste(et.nom, 3, 10, 3.6, 44, {'font-weight':800, fill:'#1d2a24'}));
+                    g.push(sv('text',{x:3,y:15,'font-size':2.8,fill:'#3d4a44'}, et.qte)); }
+  if(M.has('prix')) g.push(sv('text',{x:77,y:17,'text-anchor':'end','font-size':10,'font-weight':800,fill:'#1d2a24'}, euros(et.prix)));
+  if(M.has('unite')) g.push(sv('text',{x:3,y:22,'font-size':2.8,fill:'#1d2a24'}, `Prix au ${et.unite} : ${v.etiq.unite ? v.etiq.unite.replace('.',',') : '…'} €`));
+  let yr = 27;
+  for(const [id,t] of [['achat',"Prix d'achat : ?"],['marge','Marge : ?'],['livraison','Livré le : ?']])
+    if(M.has(id)){ g.push(sv('text',{x:3,y:yr,'font-size':2.4,fill:'#b3261e','font-weight':700}, t)); yr += 3; }
+  g.push(codeBarre(52, 25, 24, 6));
+  if(!M.size) g.push(sv('text',{x:40,y:20,'text-anchor':'middle','font-size':3,fill:'#8a968f'}, 'Cochez les mentions à afficher'));
+  return sv('svg',{viewBox:'-1 -1 82 36', class:'apercu-svg etiq', role:'img', 'aria-label':"Aperçu de l'étiquette"}, g);
+}
+const COUL_PROD = ['#c9a27e','#7cb342','#e8566c','#5ab4c5','#f2b233','#8e5bb5','#e79aa9','#4b7fa8'];
+/* Gondole vue de face. rangs : nombre d'étagères ; produits : [{r,p,nom}] ; options de dessin et de clic */
+function gondole(o){
+  const W = 100, Hh = 70, gx = 22, gw = 56, nb = o.rangs || 4, top = 11, pas = (Hh-6-top)/nb;
+  const g = [];
+  g.push(sv('rect',{x:0,y:Hh-6,width:W,height:6,fill:'#d9d2c4'}));
+  g.push(sv('rect',{x:gx-1,y:top-1,width:gw+2,height:Hh-6-top+1,fill:'#eef1ef',stroke:'#8a968f','stroke-width':.3}));
+  // fronton
+  const fr = sv('g',{class:o.zones?'zone-s5':'', 'data-z':'fronton'});
+  fr.append(sv('rect',{x:gx-1,y:2,width:gw+2,height:7,rx:.8,fill:o.fronton?'#2e6fa7':(o.zones?'rgba(239,134,171,.25)':'#dfe5e1'),stroke:o.zones&&!o.fronton?'#c2185b':'#8a968f','stroke-width':.3,'stroke-dasharray':o.zones&&!o.fronton?'1 .6':null}));
+  fr.append(sv('text',{x:W/2,y:7,'text-anchor':'middle','font-size':o.fronton?3.6:2.4,'font-weight':700,fill:o.fronton?'#fff':'#5d6b64'}, o.fronton ? o.nom.toUpperCase() : (o.zones?'Fronton':'')));
+  g.push(fr);
+  for(let r=0;r<nb;r++){
+    const base = top + (r+1)*pas, pr_ = o.parRang||4;
+    // étagère et réglette (dessinées d'abord, les étiquettes viennent par-dessus)
+    g.push(sv('rect',{x:gx,y:base,width:gw,height:.8,fill:'#8a968f'}));
+    const rg = o.reglettes ? (o.reglettes[r]||{}) : {};
+    const zr = sv('g',{class:o.zones||o.zoneReglette?'zone-s5':'', 'data-z':'reglette', 'data-r':r});
+    zr.append(sv('rect',{x:gx,y:base+.8,width:gw,height:3.4,fill:(o.zones||o.zoneReglette)&&!rg.etiq?'rgba(239,134,171,.22)':'#fff',stroke:(o.zones||o.zoneReglette)?'#c2185b':'#8a968f','stroke-width':.2,'stroke-dasharray':(o.zones||o.zoneReglette)?'1 .6':null}));
+    if(rg.etiq) for(let p=0;p<pr_;p++){ const px = gx+2+p*(gw/pr_), pw = gw/pr_-3;
+      zr.append(sv('rect',{x:px+pw/2-4,y:base+1.1,width:8,height:2.8,fill:'#fff',stroke:'#1d2a24','stroke-width':.15}));
+      zr.append(sv('text',{x:px+pw/2,y:base+3,'text-anchor':'middle','font-size':1.6,'font-weight':800,fill:'#1d2a24'}, '… €')); }
+    if(rg.stop){ zr.append(sv('path',{d:`M${gx+gw} ${base+1} l6 -2.5 v7 l-6 -2.5 z`, fill:'#f2b233', stroke:'#c2185b','stroke-width':.2}));
+      zr.append(sv('text',{x:gx+gw+3.3,y:base+2.9,'text-anchor':'middle','font-size':1.3,'font-weight':800,fill:'#c2185b'}, 'NEW')); }
+    g.push(zr);
+    // produits et leurs étiquettes
+    for(const pr of (o.produits||[]).filter(x=>x.r===r)){
+      const px = gx + 2 + pr.p*(gw/pr_), pw = gw/pr_ - 3, ph = pas - 5.5;
+      const grp = sv('g',{class:o.clicProduit?'produit-s5':'', 'data-k':`${r}-${pr.p}`, tabindex:o.clicProduit?'0':null, role:o.clicProduit?'button':null, 'aria-label':o.clicProduit?pr.nom:null});
+      const c = COUL_PROD[(r*4+pr.p)%COUL_PROD.length];
+      for(let k=0;k<3;k++) grp.append(sv('rect',{x:px+k*pw/3+.3,y:base-ph-.2,width:pw/3-.6,height:ph,rx:.6,fill:c,stroke:'rgba(0,0,0,.25)','stroke-width':.2}));
+      grp.append(texteAjuste(pr.nom, px+pw/2, base-ph/2+1, pr_<4?3:2.2, pw-1, {'text-anchor':'middle',fill:'#fff','font-weight':700}));
+      if(pr.signale) grp.append(sv('rect',{x:px-.8,y:base-ph-1.2,width:pw+1.6,height:ph+6,rx:1,fill:'none',stroke:'#c2185b','stroke-width':.6}));
+      const lw = Math.min(pw, pr_<4 ? 17 : 13), k_ = lw/13, lx = px+pw/2-lw/2;
+      if(pr.etq){
+        grp.append(sv('rect',{x:lx,y:base+.3,width:lw,height:3.6,fill:'#fff',stroke:'#1d2a24','stroke-width':.15}));
+        grp.append(texteAjuste(pr.etq.nom, lx+.4, base+1.5, 1.1*k_, lw*.62, {fill:'#1d2a24','font-weight':700}));
+        grp.append(sv('text',{x:lx+lw-.4,y:base+3.4,'text-anchor':'end','font-size':1.7*k_,'font-weight':800,fill:'#1d2a24'}, pr.etq.prix));
+        if(pr.etq.u) grp.append(texteAjuste(pr.etq.u, lx+.4, base+3.5, .95*k_, lw*.5, {fill:'#3d4a44'}));
+      }
+      if(pr.promo){
+        grp.append(sv('rect',{x:lx,y:base+.3,width:lw,height:3.6,fill:'#ffd35c',stroke:'#c2185b','stroke-width':.25}));
+        grp.append(sv('text',{x:lx+lw/2,y:base+2.6,'text-anchor':'middle','font-size':1.8*k_,'font-weight':800,fill:'#c2185b'}, pr.promo));
+      }
+      if(pr.stop){ // stop-rayon fixé sur la réglette, qui dépasse devant le produit
+        const sw = Math.min(pw+1, 18), sx = px+pw/2-sw/2, sy = base-7;
+        grp.append(sv('rect',{x:px+pw/2-.3,y:sy+5,width:.6,height:2.2,fill:'#5d6b64'}));
+        grp.append(sv('rect',{x:sx,y:sy,width:sw,height:5,rx:.8,fill:'#ffd35c',stroke:'#c2185b','stroke-width':.3}));
+        grp.append(texteAjuste(pr.stop, sx+sw/2, sy+3.3, 1.9, sw-1.2, {'text-anchor':'middle',fill:'#c2185b','font-weight':800}));
+      }
+      g.push(grp);
+    }
+  }
+  // sol à côté de la gondole
+  for(const [cote, x] of [['g',3],['d',W-19]]){
+    const val = o.sol ? o.sol[cote] : '';
+    const zs = sv('g',{class:o.zones?'zone-s5':'', 'data-z':'sol', 'data-c':cote});
+    zs.append(sv('rect',{x,y:top+8,width:16,height:Hh-6-top-8,rx:1,fill:o.zones&&!val?'rgba(239,134,171,.18)':'none',stroke:o.zones?'#c2185b':'none','stroke-width':.25,'stroke-dasharray':'1 .6'}));
+    if(o.zones && !val) zs.append(sv('text',{x:x+8,y:Hh-9,'text-anchor':'middle','font-size':2.2,fill:'#5d6b64'}, 'Sol'));
+    if(val==='kakemono'){ zs.append(sv('rect',{x:x+5,y:top+10,width:6,height:Hh-6-top-11,fill:'#ef86ab',stroke:'#1d2a24','stroke-width':.2}));
+      zs.append(sv('rect',{x:x+4,y:Hh-7,width:8,height:1,fill:'#5d6b64'}));
+      zs.append(sv('text',{x:x+8,y:top+26,'text-anchor':'middle','font-size':2.2,'font-weight':800,fill:'#fff',transform:`rotate(-90 ${x+8} ${top+26})`}, 'MARQUE')); }
+    if(val==='presentoir'){ zs.append(sv('rect',{x:x+2,y:Hh-22,width:12,height:16,rx:.6,fill:'#f2b233',stroke:'#1d2a24','stroke-width':.2}));
+      for(let k=0;k<3;k++) zs.append(sv('rect',{x:x+3+k*3.7,y:Hh-20,width:3,height:4,fill:COUL_PROD[k+2]}));
+      zs.append(sv('text',{x:x+8,y:Hh-10,'text-anchor':'middle','font-size':2,'font-weight':800,fill:'#1d2a24'}, 'OFFRE')); }
+    g.push(zs);
+  }
+  const svg = sv('svg',{viewBox:`0 0 ${W} ${Hh}`, class:'apercu-svg gondole', role:'img', 'aria-label':'Gondole vue de face'}, g);
+  if(o.onZone) svg.addEventListener('click', ev=>{ const z = ev.target.closest('.zone-s5'); if(z) o.onZone(z.dataset.z, z.dataset.r!==undefined?Number(z.dataset.r):null, z.dataset.c||null); });
+  if(o.clicProduit){
+    svg.addEventListener('click', ev=>{ const p = ev.target.closest('.produit-s5'); if(p) o.clicProduit(p.dataset.k); });
+    svg.addEventListener('keydown', ev=>{ const p = ev.target.closest && ev.target.closest('.produit-s5'); if(p && (ev.key==='Enter'||ev.key===' ')){ ev.preventDefault(); o.clicProduit(p.dataset.k); } });
+  }
+  return svg;
+}
+function produitsGondole(){ const G = GONDOLES[etat.enseigne]; return G.rangs.flatMap((r,i)=>r.map((nom,p)=>({r:i,p,nom}))); }
+function apercuRayon(avecZones){
+  const v = s5(), G = GONDOLES[etat.enseigne];
+  return gondole({nom:G.nom, produits:produitsGondole(), fronton:v.rayon.fronton, reglettes:v.rayon.reglettes, sol:v.rayon.sol, zones:avecZones,
+    onZone: avecZones ? placerElement : null});
+}
+function apercuMaj(avecZone){
+  const v = s5(), E = etat.enseigne, M = MAJ[E], G = GONDOLES[E], m = v.maj;
+  const prods = produitsGondole().map(pr=>{
+    if(m.rang!==null && pr.r===m.rang && pr.p===M.pos){
+      return {...pr, promo: M.type==='promo' ? (nombre(m.nouveau)!==null ? `-${M.taux}% ${euros(nombre(m.nouveau))}` : `-${M.taux}%`) : null,
+                     etq: M.type==='prix' ? {nom:M.produit, prix:euros(M.nouveau), u:m.unite?`${m.unite.replace('.',',')} € le L`:''} : null};
+    }
+    return pr;
+  });
+  return gondole({nom:G.nom, produits:prods, fronton:true, reglettes:[{},{},{},{}], zoneReglette:avecZone,
+    onZone: avecZone ? (z, r)=>{ if(z==='reglette'){ v.maj.rang = r; sauver(); rendreS5(); } } : null});
+}
+function apercuControle(interactif){
+  const v = s5(), E = etat.enseigne;
+  const prods = CONTROLE[E].map(x=>({r:x.r, p:x.p, nom:x.prod, etq:x.etq, stop:x.stop, signale:!!v.controle[x.r+'-'+x.p]}));
+  return gondole({nom:GONDOLES[E].nom, produits:prods, fronton:true, rangs:2, parRang:3, reglettes:[{},{}],
+    clicProduit: interactif ? k=>{ if(v.controle[k]) delete v.controle[k]; else v.controle[k] = true; sauver(); rendreS5(); } : null});
+}
+
+let elementChoisi = 'panneau';
+function placerElement(z, r, c){
+  const v = s5(), el_ = ELEMENTS[elementChoisi], R = v.rayon;
+  if(!el_.zones.includes(z)){ erreurS5 = el_.mauvais; rendreS5(); return; }
+  erreurS5 = '';
+  if(elementChoisi==='panneau') R.fronton = !R.fronton;
+  if(elementChoisi==='etiquette') R.reglettes[r].etiq = !R.reglettes[r].etiq;
+  if(elementChoisi==='stop') R.reglettes[r].stop = !R.reglettes[r].stop;
+  if(z==='sol') R.sol[c] = R.sol[c]===elementChoisi ? '' : elementChoisi;
+  sauver(); rendreS5();
+}
+let erreurS5 = '';
+
+/* ----- contenu de chaque étape ----- */
+function zoneTravailS5(et){
+  const v = s5(), E = etat.enseigne, maj = () => { sauver(); rendreS5(); };
+  const champ = (lib, val, set, attrs={}) => el('label',{class:'champ'}, lib, el('input',{type:'text', value:val||'', ...attrs, oninput:ev=>{ set(ev.target.value); sauver(); rafraichirS5(); }}));
+  const coches = (liste, tab) => el('div',{class:'coches'}, liste.map(mt=>el('label',{}, el('input',{type:'checkbox', checked:tab.includes(mt.id), onchange:ev=>{
+    const k = tab.indexOf(mt.id); ev.target.checked ? (k<0 && tab.push(mt.id)) : (k>=0 && tab.splice(k,1)); maj(); }}), mt.t)));
+  if(et.id==='etiquette'){
+    const e = S5[E].etiq;
+    return el('div',{class:'travail-s5'},
+      el('div',{class:'cadre-plan centre', id:'apercuS5'}, apercuEtiquette()),
+      el('div',{class:'case'}, el('h3',{}, "Quelles mentions écrivez-vous sur l'étiquette ?"), coches(MENTIONS_ETIQ, v.etiq.mentions)),
+      el('div',{class:'case'}, el('h3',{}, `Le calcul du prix au ${e.unite==='kg'?'kilo':'litre'}`),
+        el('p',{class:'aide'}, `${e.nom} : ${e.qte}, vendu ${euros(e.prix)}.`),
+        champ(`Prix au ${e.unite==='kg'?'kilo':'litre'} (en €)`, v.etiq.unite, x=>v.etiq.unite=x, {inputmode:'decimal', placeholder:'ex. 12,50'})));
+  }
+  if(et.id==='rayon'){
+    return el('div',{class:'travail-s5'},
+      el('div',{class:'case'}, el('h3',{}, 'ILV ou PLV ? Triez ces éléments.'),
+        el('div',{class:'tri'}, TRI_ILV.map((x,i)=>el('div',{class:'ligne-tri'}, el('span',{}, x.t),
+          el('div',{class:'puces'}, ['ILV','PLV'].map(r=>el('button',{class:'puce', type:'button', 'aria-pressed':String(v.tri[i]===r), onclick:()=>{ v.tri[i]=r; maj(); }}, r))))))),
+      el('div',{class:'case'}, el('h3',{}, 'Habillez la gondole'),
+        el('p',{class:'aide'}, "1. Choisissez un élément. 2. Cliquez à l'endroit où il se place sur la gondole. Cliquez à nouveau pour le retirer."),
+        el('div',{class:'palette-s5'}, Object.entries(ELEMENTS).map(([k,x])=>el('button',{class:'mode', type:'button', 'aria-pressed':String(elementChoisi===k), onclick:()=>{ elementChoisi=k; erreurS5=''; rendreS5(); }},
+          el('span',{class:'type-'+x.type}, x.type), ' ', x.nom))),
+        erreurS5 ? el('div',{class:'retour'}, '⚠️ '+erreurS5) : null,
+        el('div',{class:'cadre-plan', id:'apercuS5'}, apercuRayon(true))));
+  }
+  if(et.id==='maj'){
+    const M = MAJ[E], m = v.maj;
+    const note = M.type==='promo'
+      ? el('div',{class:'note-direction'}, el('strong',{}, 'Note de la direction'),
+          el('p',{}, `Du ${M.debut} au ${M.fin} : ${M.produit}, -${M.taux} %. Prix de référence : ${euros(M.ref)}.`),
+          el('p',{}, "Merci de calculer le nouveau prix et de poser l'étiquette de réduction sous le produit."))
+      : el('div',{class:'note-direction'}, el('strong',{}, 'Note de la direction'),
+          el('p',{}, `À partir d'aujourd'hui, le ${M.produit} passe de ${euros(M.ancien)} à ${euros(M.nouveau)}.`),
+          el('p',{}, "Merci de mettre à jour son étiquette sur le rayon, avec le nouveau prix au litre."));
+    return el('div',{class:'travail-s5'}, note,
+      el('div',{class:'case'},
+        M.type==='promo'
+          ? [champ('Nouveau prix (€) : à calculer', m.nouveau, x=>m.nouveau=x, {inputmode:'decimal'}),
+             el('h3',{style:'margin-top:12px'}, "Quelles mentions figurent sur l'étiquette de réduction ?"), coches(MENTIONS_PROMO, m.mentions)]
+          : [champ('Nouveau prix au litre (€) : à calculer', m.unite, x=>m.unite=x, {inputmode:'decimal'})]),
+      el('div',{class:'case'}, el('h3',{}, "Posez l'étiquette : cliquez sur la réglette sous le produit concerné"),
+        el('div',{class:'cadre-plan', id:'apercuS5'}, apercuMaj(true))));
+  }
+  if(et.id==='controle'){
+    const items = CONTROLE[E];
+    const signales = items.filter(x=>v.controle[x.r+'-'+x.p]);
+    return el('div',{class:'travail-s5'},
+      el('div',{class:'cadre-plan', id:'apercuS5'}, apercuControle(true)),
+      el('p',{class:'note', style:'margin:0'}, "Cliquez sur un produit pour le signaler (cliquez à nouveau pour annuler). Regardez bien les étiquettes et les stop-rayons."),
+      el('div',{class:'case'}, el('h3',{}, 'Fiche de signalement'),
+        signales.length ? el('div',{class:'fiche-anom'}, signales.map(x=>{ const k = x.r+'-'+x.p;
+          return el('label',{class:'champ'}, x.prod,
+            el('select',{onchange:ev=>{ v.controle[k] = ev.target.value || true; maj(); }},
+              el('option',{value:''}, '— Type d\u2019anomalie —'),
+              Object.entries(TYPES_ANOM).map(([t,lib])=>el('option',{value:t, selected:v.controle[k]===t}, lib)))); }))
+          : el('p',{class:'aide'}, 'Aucun produit signalé pour le moment.')));
+  }
+  if(et.id==='bilan'){
+    const etapes = etapesS5().filter(x=>x.id!=='bilan');
+    return el('div',{class:'travail-s5'},
+      el('div',{class:'bilan-grille'},
+        el('figure',{}, apercuEtiquette(), el('figcaption',{}, "L'étiquette prix")),
+        el('figure',{}, apercuRayon(false), el('figcaption',{}, 'Le rayon habillé'))),
+      el('ul',{class:'messages'}, etapes.map(x=>{ const okE = etapeS5Valide(x);
+        return el('li',{class:okE?'ok':''}, el('span',{class:'ic'}, okE?'✅':'❓'), el('span',{}, okE ? `${x.label} : complet.` : `${x.label} : à terminer (revenez à cette étape).`)); })));
+  }
+}
+function panneauS5(et, etapes){
+  const v = s5(), i = v.etape, kids = [
+    el('p',{class:'progression', style:'margin:0'}, `Étape ${i+1} sur ${etapes.length}`,
+      el('span',{class:'barre', style:'display:block'}, el('span',{style:`display:block;height:100%;background:var(--vert);width:${Math.round((i+1)/etapes.length*100)}%`}))),
+    el('h3',{class:'question'}, et.q),
+    el('p',{class:'aide', style:'margin:0'}, et.aide)];
+  if(et.regle) kids.push(el('div',{class:'regle'}, el('span',{class:'etiquette'}, 'La règle du pro'), el('p',{}, et.regle)));
+  if(et.regarder) kids.push(el('div',{class:'regarder'}, el('strong',{}, 'Pour réussir, vérifiez :'), el('ul',{}, et.regarder.map(x=>el('li',{}, x)))));
+  if(et.id!=='bilan'){
+    kids.push(el('ul',{class:'messages compact'}, verdictS5(et.id).map(r=>el('li',{class:r.ok?'ok':''}, el('span',{class:'ic'}, r.ok?'✅':'⚠️'), el('span',{}, r.t)))));
+  }
+  const valide = etapeS5Valide(et);
+  kids.push(el('div',{class:'ligne-btn nav-etapes'},
+    el('button',{class:'btn', type:'button', disabled:i===0, onclick:()=>{ v.etape--; erreurS5=''; sauver(); rendreS5(); }}, 'Précédent'),
+    i < etapes.length-1 ? el('button',{class:'btn plein', id:'btnSuivantS5', type:'button', disabled:!valide, onclick:()=>{ v.etape++; erreurS5=''; sauver(); rendreS5(); window.scrollTo({top:0}); }}, 'Suivant') : null));
+  if(et.id!=='bilan') kids.push(el('p',{class:'note'+(valide?' cache':''), id:'noteS5', style:'margin:0'}, 'Pour continuer : corrigez les points ⚠️.'));
+  const atteinte = k => etapes.slice(0,k).every(etapeS5Valide);
+  kids.push(el('ol',{class:'liste-etapes'}, etapes.map((x,k)=>el('li',{class:(k===i?'courante ':'')+(etapeS5Valide(x)&&k<i?'faite':'')},
+    el('button',{type:'button', disabled:!atteinte(k), onclick:()=>{ v.etape=k; erreurS5=''; sauver(); rendreS5(); }}, x.label)))));
+  return kids;
+}
+function rafraichirS5(){
+  const etapes = etapesS5(), v = s5(), et = etapes[v.etape];
+  const a = document.getElementById('apercuS5');
+  if(a){ const f = {etiquette:apercuEtiquette, maj:()=>apercuMaj(true)}[et.id]; if(f) a.replaceChildren(f()); }
+  const pan = document.querySelector('#atelierS5 > aside.panneau');
+  if(pan) pan.replaceChildren(...panneauS5(et, etapes));
+}
+function rendreS5(){
+  const z = document.getElementById('atelierS5'); if(!z) return;
+  const etapes = etapesS5(), v = s5(); if(v.etape >= etapes.length) v.etape = etapes.length-1;
+  const et = etapes[v.etape];
+  z.replaceChildren(el('div',{}, zoneTravailS5(et)), el('aside',{class:'panneau', 'aria-live':'polite'}, panneauS5(et, etapes)));
+}
+function pageVitrine(){
+  if(!etat.enseigne) return el('div',{class:'vide'}, "Choisissez d'abord votre enseigne dans l'onglet « Mon enseigne ».");
+  const e = ENSEIGNES[etat.enseigne];
+  const page = el('section',{},
+    el('h2',{}, 'Signalétique et prix — '+e.nom),
+    el('div',{class:'atelier', id:'atelierS5'}));
+  setTimeout(rendreS5);
+  return page;
+}
+
+/* =========================================================
+   CLIENT TEST ET ORAL (séance 6)
+   ========================================================= */
+/* Client test sur le PLAN DE RÉFÉRENCE de l'enseigne : ne dépend pas du plan des élèves.
+   cible : nom d'un rayon du plan de référence, ou 'caisse'. */
+const CAISSE_REF = {city:{x:3,y:12.3}, normal:{x:1.4,y:12.3}, nd:{x:14,y:12.2}, mdm:{x:3.5,y:12.3}};
+const CARTES = {
+  city:[
+    {pic:'📦', t:"Bonjour ! Je viens juste retirer un colis.", cible:'caisse'},
+    {pic:'🥛', t:"Où est-ce que je trouve du lait, s'il vous plaît ?", cible:'Produits laitiers'},
+    {pic:'🍕', t:"Vous avez des pizzas surgelées ?", cible:'Surgelés'},
+    {pic:'🧽', t:"Je cherche du liquide vaisselle.", cible:'Entretien'},
+    {pic:'🍝', t:"Il me faut des pâtes et de la sauce tomate.", cible:'Épicerie salée'},
+    {pic:'🏷️', t:"Quelles sont vos promotions cette semaine ?", cible:'Promotions'}],
+  normal:[
+    {pic:'🌸', t:"Où sont les parfums ?", cible:'Parfums'},
+    {pic:'🧴', t:"Je cherche du shampoing, s'il vous plaît.", cible:'Cheveux'},
+    {pic:'🍭', t:"Vous avez des bonbons ?", cible:'Confiserie'},
+    {pic:'🧹', t:"Il me faut du produit ménager.", cible:'Entretien'},
+    {pic:'✏️', t:"Je cherche un cahier et des stylos.", cible:'Papeterie'},
+    {pic:'💳', t:"J'ai fini, où est-ce que je paie ?", cible:'caisse'}],
+  nd:[
+    {pic:'🎲', t:"Je cherche un jeu de société pour mes neveux.", cible:'Jeux et jouets'},
+    {pic:'🔭', t:"Je voudrais regarder les télescopes.", cible:'Astronomie'},
+    {pic:'📚', t:"Vous avez des livres sur les oiseaux ?", cible:'Librairie'},
+    {pic:'🎁', t:"Une idée de cadeau à moins de 20 € ?", cible:'Idées cadeaux'},
+    {pic:'🍵', t:"Vous vendez du thé ou des tisanes ?", cible:'Saveurs'},
+    {pic:'💳', t:"C'est bon pour moi, où est-ce que je paie ?", cible:'caisse'}],
+  mdm:[
+    {pic:'💡', t:"Je cherche une lampe pour mon salon.", cible:'Luminaires'},
+    {pic:'🪞', t:"Il me faut un grand miroir pour mon entrée.", cible:'Miroirs et cadres'},
+    {pic:'🧶', t:"Vous avez des plaids ?", cible:'Coussins, plaids'},
+    {pic:'🛏️', t:"Je voudrais voir des lits.", cible:'Chambre'},
+    {pic:'🕯️', t:"Une bougie parfumée à offrir, c'est possible ?", cible:'Bougies et senteurs'},
+    {pic:'💳', t:"J'ai trouvé mon bonheur, je peux payer où ?", cible:'caisse'}]
+};
+function meublesReference(){
+  const E = etat.enseigne, ca = CAISSE_REF[E];
+  return [{id:'caisse', label:E==='city'?'Caisse, services':'Caisse', box:{n:0, x:ca.x, y:ca.y, w:2.6, h:1}, ref:true},
+          ...emps().map(s=>({id:'r'+s.n, label:s.defaut, box:s, ref:true}))];
+}
+const idCible = cible => { if(cible==='caisse') return 'caisse'; const m = meublesReference().find(x=>x.label===cible); return m ? m.id : null; };
+const cl = () => { const c = etat.client; if(!c.ordre || c.ordre.length !== 6) c.ordre = [0,1,2,3,4,5].sort(()=>Math.random()-.5); c.i = c.i || 0; c.rep = c.rep || {}; return c; };
+function phraseOrientation(b){
+  const c = centre(b);
+  const avant = c.y > 9 ? "à l'avant du magasin, près de l'entrée" : (c.y > 5.5 ? 'au milieu du magasin' : 'au fond du magasin');
+  const cote = c.x < 7 ? 'sur votre gauche' : (c.x > 13 ? 'sur votre droite' : 'droit devant vous');
+  return `C'est ${avant}, ${cote}.`;
+}
+function planClient(surligne, liste){
+  const meubles = liste || meublesReference();
+  const g = [];
+  g.push(sv('rect',{x:0,y:0,width:L,height:H,fill:etat.mood.sol||'#efe9dc'}));
+  g.push(sv('rect',{x:RESERVE.x,y:RESERVE.y,width:RESERVE.w,height:RESERVE.h,fill:'#cfd6d2'}));
+  g.push(sv('text',{x:RESERVE.w/2,y:RESERVE.h/2+.2,'text-anchor':'middle','font-size':.6,fill:'#4b5a53'},'Réserve'));
+  for(const vt of VITRINES) g.push(sv('rect',{x:vt.x,y:vt.y,width:vt.w,height:vt.h,fill:'rgba(185,212,199,.55)'}));
+  for(const d of decors()) g.push(sv('rect',{x:d.x,y:d.y,width:d.w,height:d.h,fill:'#9aa59f'}));
+  g.push(sv('path',{d:`M${PORTE.x} ${H} H0 V0 H${L} V${H} H${PORTE.x+PORTE.w}`,fill:'none',stroke:'#1d2a24','stroke-width':.25}));
+  g.push(sv('text',{x:ENTREE.x,y:H+.75,'text-anchor':'middle','font-size':.55,fill:'#1b6b46','font-weight':700},'▲ Entrée'));
+  for(const m of meubles){
+    const b = m.box, grp = sv('g',{class:'emplacement cliquable', 'data-id':m.id, tabindex:'0', role:'button', 'aria-label':m.label});
+    const fond = m.ref ? (m.id==='caisse' ? '#6b4f3a' : '#dfe5e1') : (m.autre?'#dfe5e1':m.c), texteClair = m.ref ? m.id==='caisse' : !m.autre;
+    grp.append(sv('rect',{class:'corps',x:b.x,y:b.y,width:b.w,height:b.h,rx:.12,fill:fond,
+      stroke:surligne===m.id?'#c2185b':'#1d2a24','stroke-width':surligne===m.id?.25:.05}));
+    const vert = b.h > b.w*1.5, fs = Math.max(.22, Math.min(.42, ((vert?b.h:b.w)-.3)/(m.label.length*.58)));
+    grp.append(sv('text',{x:b.x+b.w/2,y:b.y+b.h/2+fs/3,'text-anchor':'middle','font-size':fs,fill:texteClair?'#fff':'#3d4a44','font-weight':600,
+      transform:vert?`rotate(-90 ${b.x+b.w/2} ${b.y+b.h/2})`:null}, m.label));
+    if(surligne===m.id) grp.append(sv('rect',{x:b.x-.35,y:b.y-.35,width:b.w+.7,height:b.h+.7,rx:.3,fill:'none',stroke:'#c2185b','stroke-width':.22,'stroke-dasharray':'.5 .25'}));
+    g.push(grp);
+  }
+  return sv('svg',{viewBox:`-0.4 -0.4 ${L+.8} ${H+1.4}`, class:'plan', role:'img', 'aria-label':'Plan du magasin'}, g);
+}
+function rendreClient(){
+  const z = document.getElementById('atelierClient'); if(!z) return;
+  const c = cl(), E = etat.enseigne, cartes = CARTES[E];
+  const fini = c.i >= cartes.length;
+  const carte = fini ? null : cartes[c.ordre[c.i]];
+  const rep = carte ? c.rep[c.ordre[c.i]] : null;
+  const M = meublesReference();
+  const idC = carte ? idCible(carte.cible) : null;
+  const cible = idC ? M.find(m=>m.id===idC) : null;
+  const svg = planClient(rep ? idC : null);
+  if(carte && !rep && cible){
+    const choisir = id => { c.rep[c.ordre[c.i]] = {ok: id===idC, id}; sauver(); rendreClient(); };
+    svg.addEventListener('click', ev=>{ const g = ev.target.closest('.emplacement'); if(g) choisir(g.dataset.id); });
+    svg.addEventListener('keydown', ev=>{ const g = ev.target.closest && ev.target.closest('.emplacement'); if(g && (ev.key==='Enter'||ev.key===' ')){ ev.preventDefault(); choisir(g.dataset.id); } });
+  }
+  const score = Object.values(c.rep).filter(r=>r.ok).length, joues = Object.keys(c.rep).length;
+  const panneau = [];
+  if(fini){
+    panneau.push(el('h3',{class:'question'}, 'Client test terminé'),
+      el('p',{class:'score-client'}, `${score} client${score>1?'s':''} bien orienté${score>1?'s':''} sur ${cartes.length}`),
+      el('p',{class:'aide'}, score===cartes.length ? "Votre plan est clair : chaque client trouve ce qu'il cherche." : "Pour les clients mal orientés, votre plan est-il assez clair ? Pensez au panneau de rayon, ou à revoir un emplacement."),
+      el('button',{class:'btn plein', type:'button', onclick:()=>{ etat.client = {}; sauver(); rendreClient(); }}, 'Recommencer avec de nouvelles cartes'));
+  } else {
+    panneau.push(el('p',{class:'progression', style:'margin:0'}, `Carte ${c.i+1} sur ${cartes.length}`),
+      el('div',{class:'carte-client'}, el('span',{class:'pic','aria-hidden':'true'}, carte.pic), el('p',{}, `« ${carte.t} »`)),
+      ('speechSynthesis' in window) ? el('button',{class:'btn petit', type:'button', onclick:()=>parler(carte.t)}, '🔊 Écouter le client') : null);
+    if(!rep) panneau.push(el('div',{class:'regle'}, el('span',{class:'etiquette'}, 'À vous'),
+      el('ol',{class:'consignes-client'}, el('li',{}, 'Lisez la demande du client à voix haute.'), el('li',{}, 'Cliquez sur le plan, là où vous envoyez le client.'), el('li',{}, 'Répondez-lui avec une phrase complète et polie.'))));
+    else {
+      panneau.push(rep.ok ? el('div',{class:'retour ok'}, '✅ Bonne orientation !') : el('div',{class:'retour'}, `⚠️ Ce n'est pas le bon endroit. Le client cherchait : ${cible.label} (entouré en rose sur le plan).`));
+      panneau.push(el('div',{class:'regle'}, el('span',{class:'etiquette'}, 'Vous pouvez répondre'),
+        el('p',{}, `« Bien sûr ! ${phraseOrientation(cible.box)} Je vous accompagne si vous voulez. »`)));
+      panneau.push(el('button',{class:'btn plein', type:'button', onclick:()=>{ c.i++; sauver(); rendreClient(); }}, c.i < cartes.length-1 ? 'Carte suivante' : 'Voir le résultat'));
+    }
+    if(joues) panneau.push(el('p',{class:'note', style:'margin:0'}, `Score : ${score} sur ${joues}`));
+  }
+  z.replaceChildren(el('div',{class:'cadre-plan'}, svg), el('aside',{class:'panneau','aria-live':'polite'}, panneau.filter(Boolean)));
+}
+
+
+/* ----- Export PDF (A4 paysage) sans fenêtre d'impression ----- */
+function chargerScript(src, test){
+  return new Promise((ok, ko)=>{
+    if(test()) return ok();
+    const sc = document.createElement('script'); sc.src = src; sc.onload = ok; sc.onerror = ko; document.head.append(sc);
+  });
+}
+async function telechargerPDF(page, nom, bouton){
+  const texte = bouton ? bouton.textContent : '';
+  if(bouton){ bouton.disabled = true; bouton.textContent = 'Création du PDF…'; }
+  try{
+    await chargerScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js', ()=>!!window.html2canvas);
+    await chargerScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js', ()=>!!(window.jspdf && window.jspdf.jsPDF));
+    const zone = document.getElementById('zoneImpression');
+    zone.replaceChildren(page); zone.classList.add('rendu-pdf');
+    await new Promise(r=>setTimeout(r, 150));
+    const canvas = await html2canvas(page, {scale:2, backgroundColor:'#ffffff', useCORS:true, logging:false});
+    const doc = new jspdf.jsPDF({orientation:'landscape', unit:'mm', format:'a4'});
+    const W = 297, Hp = 210, marge = 8, lMax = W-2*marge, hMax = Hp-2*marge;
+    const ratio = Math.min(lMax/canvas.width, hMax/canvas.height);
+    const l = canvas.width*ratio, h = canvas.height*ratio;
+    doc.addImage(canvas.toDataURL('image/jpeg', .92), 'JPEG', (W-l)/2, marge, l, h);
+    doc.save(nom);
+    statut(`PDF « ${nom} » créé. Rangez-le dans votre espace personnel ou votre portfolio.`);
+  }catch(e){
+    statut("Le PDF n'a pas pu être créé. Vérifiez la connexion à Internet, puis réessayez.");
+  }finally{
+    document.getElementById('zoneImpression').classList.remove('rendu-pdf');
+    if(bouton){ bouton.disabled = false; bouton.textContent = texte; }
+  }
+}
+const nomFichier = base => base.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Za-z0-9_-]+/g,'-') + '.pdf';
+
+/* ----- Page de l'oral ----- */
+async function capture3D(){
+  try{
+    await chargerThree();
+    const r = new THREE.WebGLRenderer({antialias:true, preserveDrawingBuffer:true});
+    r.setSize(900, 560);
+    const scene = construireScene(), cam = new THREE.PerspectiveCamera(50, 900/560, .1, 200);
+    cam.position.set(L/2 + 8, 15, H/2 + 15); cam.lookAt(L/2, 0, H/2 - 1);
+    scene.children.filter(o=>o.isSprite).forEach(e=>e.scale.set(4.4, 1.1, 1));
+    r.render(scene, cam);
+    const url = r.domElement.toDataURL('image/png'); r.dispose(); return url;
+  }catch(e){ return null; }
+}
+async function imprimerOral(){
+  const bouton = document.getElementById('btnImprimer');
+  const e = ENSEIGNES[etat.enseigne], m = etat.mood, P = planEtat(), [a,b] = prenoms();
+  const img3d = await capture3D();
+  const plan = planClient(null, meublesPlan()); plan.setAttribute('class','plan-impr');
+  const choix = etapesPlan().filter(x=>['place','caisse','chemin'].includes(x.type)).map(x=>{
+    const ch = P.choix[x.id] || {}, s = x.type==='place' && ch.slot ? emp(ch.slot) : null;
+    const raison = ch.raison!==undefined ? (RAISONS[cleRaison(x)]||[])[ch.raison] : '';
+    return el('li',{}, el('strong',{}, (x.label||'Parcours')+' : '), s ? s.nom+'. ' : (x.type==='caisse' && P.caisse ? phraseOrientation(boiteCaisse()).replace("C'est ","")+' ' : ''), raison ? el('em',{}, raison) : null);
+  });
+  const etiq = (t,v) => el('div',{class:'i-etiq'}, el('b',{}, t), v || '—');
+  const page = el('div',{class:'page-impr'},
+    el('header',{class:'i-tete'}, el('div',{}, el('h1',{}, `${e.pic} ${e.nom} — le plan de notre nouveau magasin`), el('p',{}, `Binôme : ${a} et ${b}`)),
+      el('p',{}, "L'espace qui parle — Terminale CAP EPC")),
+    el('div',{class:'i-corps'},
+      el('div',{class:'i-gauche'}, plan, img3d ? el('img',{src:img3d, alt:'Vue 3D du magasin', class:'i-3d'}) : null),
+      el('div',{class:'i-droite'},
+        el('section',{}, el('h2',{}, 'Notre ambiance'),
+          el('div',{class:'i-bande'}, (m.couleurs.length?m.couleurs:['#dfe5e1']).map(c=>el('span',{style:`background:${c}`}))),
+          el('div',{class:'i-produits'}, m.produits.filter(p=>p.img).slice(0,4).map(p=>el('img',{src:p.img, alt:p.nom||'Produit'}))),
+          el('div',{class:'i-grille'}, etiq('Matières', m.matieres.join(', ')), etiq('Lumière', m.lumiere),
+            etiq('Son', [...m.sons, m.sonAutre].filter(Boolean).join(', ')), etiq('Odeur', [...m.odeurs, m.odeurAutre].filter(Boolean).join(', '))),
+          el('p',{class:'i-mots'}, m.mots.filter(Boolean).join(' · ')),
+          m.pqGlobal ? el('p',{class:'i-just'}, m.pqGlobal) : null),
+        el('section',{}, el('h2',{}, 'Nos choix d\u2019implantation'), el('ul',{class:'i-choix'}, choix)))));
+  await telechargerPDF(page, nomFichier(`oral_${e.nom}_${a}_${b}`), bouton);
+}
+
+async function imprimerJeuRole(ev){
+  const E = etat.enseigne, e = ENSEIGNES[E];
+  const plan = planClient(null); plan.setAttribute('class','plan-impr');
+  const page = el('div',{class:'page-impr'},
+    el('header',{class:'i-tete'}, el('h1',{}, `${e.pic} ${e.nom} — orienter le client`), el('p',{}, "L'espace qui parle — Terminale CAP EPC")),
+    el('div',{class:'i-corps'},
+      el('div',{class:'i-gauche'}, plan),
+      el('div',{class:'i-cartes'}, CARTES[E].map(k=>el('div',{class:'i-carte'}, el('span',{}, k.pic), el('p',{}, `« ${k.t} »`))))));
+  await telechargerPDF(page, nomFichier(`jeu-de-role_${e.nom}`), ev && ev.currentTarget);
+}
+function pageClient(){
+  if(!etat.enseigne) return el('div',{class:'vide'}, "Choisissez d'abord votre enseigne dans l'onglet « Mon enseigne ».");
+  const e = ENSEIGNES[etat.enseigne];
+  const page = el('section',{},
+    el('h2',{}, 'Client test — '+e.nom),
+    el('p',{class:'aide'}, `Voici le magasin ${e.nom} tel que l'enseigne l'a aménagé. Un autre binôme joue les clients : orientez-les, comme vous le ferez en PFMP dans un magasin que vous n'avez pas conçu.`),
+    el('div',{class:'ligne-btn', style:'margin-bottom:10px'}, el('button',{class:'btn', type:'button', onclick:imprimerJeuRole}, '📄 Télécharger le plan et les cartes en PDF (jeu de rôle sans ordinateur)')),
+    el('div',{class:'atelier atelier-client', id:'atelierClient'}),
+    el('div',{class:'verif', style:'margin-top:24px'},
+      el('div',{class:'verif-tete'}, el('span',{class:'etiquette', style:'margin:0'}, 'Préparer l\u2019oral'),
+        el('button',{class:'btn plein', id:'btnImprimer', type:'button', onclick:imprimerOral}, '📄 Télécharger la page de l\u2019oral en PDF')),
+      el('p',{style:'margin:0'}, "Un PDF d'une page A4 en paysage : votre plan, la vue 3D, votre moodboard et les raisons de vos choix. Il sert pour l'oral et comme preuve dans votre portfolio.")));
+  setTimeout(rendreClient);
+  return page;
+}
+
+function pageBientot(o){
+  return el('div',{class:'bientot'},
+    el('h2',{}, o.nom),
+    el('p',{}, `Cet onglet arrivera pour la ${o.seance.toLowerCase()}.`));
+}
+
+/* =========================================================
+   RENDU GÉNÉRAL
+   ========================================================= */
+function rendre(){
+  if(!etat.ouverts[ongletActif]) ongletActif = 'accueil';
+  rendreEquipe(); rendreOnglets();
+  const o = ONGLETS.find(x=>x.id===ongletActif);
+  const main = document.getElementById('contenu');
+  if(o.bientot){ main.replaceChildren(el('div',{class:'page'}, pageBientot(o))); return; }
+  const contenu = {accueil:pageAccueil, enseigne:pageEnseigne, moodboard:pageMoodboard, plan:pagePlan, vitrine:pageVitrine, client:pageClient}[o.id]();
+  main.replaceChildren(el('div',{class:'page'+(['plan','vitrine','client'].includes(o.id)?' large':'')}, blocMission(o.id), contenu));
+  rendreApercu();
+}
+
+/* =========================================================
+   FICHIER : ENREGISTRER / OUVRIR
+   ========================================================= */
+document.getElementById('btnEnregistrer').addEventListener('click', ()=>{
+  const [a,b] = prenoms();
+  const ens = etat.enseigne ? ENSEIGNES[etat.enseigne].nom : 'sans-enseigne';
+  const nom = `magasin_${ens}_${a}_${b}`.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Za-z0-9_-]+/g,'-') + '.json';
+  const blob = new Blob([JSON.stringify(etat)], {type:'application/json'});
+  const lien = el('a',{href:URL.createObjectURL(blob), download:nom});
+  document.body.append(lien); lien.click(); lien.remove();
+  setTimeout(()=>URL.revokeObjectURL(lien.href), 2000);
+  statut(`Fichier « ${nom} » créé. Rangez-le dans votre espace personnel.`);
+});
+document.getElementById('btnOuvrir').addEventListener('click', ()=>document.getElementById('fichierOuvrir').click());
+document.getElementById('fichierOuvrir').addEventListener('change', ev=>{
+  const f = ev.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try{
+      const d = JSON.parse(r.result);
+      if(!d || d.version !== 1 || !d.mood) throw new Error();
+      const ouverts = {...etat.ouverts};
+      etat = fusion(etatVide(), d);
+      // les onglets ouverts par l'enseignante sur ce poste restent ouverts
+      for(const k in ouverts) etat.ouverts[k] = etat.ouverts[k] || ouverts[k];
+      sauver(); rendre();
+      statut(`Fichier « ${f.name} » ouvert.`);
+    }catch(e){
+      statut("Ce fichier ne vient pas de L'espace qui parle. Choisissez le fichier .json enregistré en fin de séance.");
+    }
+  };
+  r.readAsText(f); ev.target.value='';
+});
+
+/* =========================================================
+   ESPACE ENSEIGNANT
+   ========================================================= */
+const dlg = document.getElementById('dlgEnseignant');
+document.getElementById('btnEnseignant').addEventListener('click', ()=>{
+  document.getElementById('dlgCode').classList.remove('cache');
+  document.getElementById('dlgBascules').classList.add('cache');
+  document.getElementById('codeSaisi').value=''; document.getElementById('codeErreur').textContent='';
+  dlg.showModal();
+});
+dlg.querySelectorAll('[data-fermer]').forEach(b=>b.addEventListener('click', ()=>dlg.close()));
+function validerCode(){
+  if(document.getElementById('codeSaisi').value.trim() !== CODE_ENSEIGNANT){
+    document.getElementById('codeErreur').textContent = 'Code incorrect.'; return;
+  }
+  document.getElementById('dlgCode').classList.add('cache');
+  document.getElementById('dlgBascules').classList.remove('cache');
+  document.getElementById('bascules').replaceChildren(...ONGLETS.map(o=>
+    el('label',{}, el('span',{}, `${o.nom} (${o.seance})`),
+      el('input',{type:'checkbox', checked:etat.ouverts[o.id], onchange:ev=>{ etat.ouverts[o.id]=ev.target.checked; sauver(); rendre(); }}))));
+}
+document.getElementById('btnValiderCode').addEventListener('click', validerCode);
+document.getElementById('codeSaisi').addEventListener('keydown', ev=>{ if(ev.key==='Enter') validerCode(); });
+document.getElementById('btnToutEffacer').addEventListener('click', async ()=>{
+  if(!await demander("Effacer tout le travail enregistré sur ce poste ? Les fichiers déjà enregistrés par les élèves ne sont pas touchés.", "Effacer")) return;
+  try{ localStorage.removeItem(CLE_STOCKAGE); }catch(e){}
+  etat = etatVide(); ongletActif='accueil'; dlg.close(); rendre();
+  statut('Travail effacé sur ce poste.');
+});
+
+rendre();
+statut(etat.maj ? "Travail retrouvé sur cet ordinateur." : "");
+</script>
+</body>
+</html>
