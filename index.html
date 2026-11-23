@@ -302,6 +302,17 @@ svg.plan text{font-family:'Lexend',Arial,sans-serif;pointer-events:none}
 .i-etiq b{display:block;font-size:7pt;color:#5d6b64}
 .i-mots{font-weight:700;text-align:center;margin:4px 0}
 .i-just{font-style:italic;margin:0;font-size:9pt}
+.btn-fiche{margin-top:10px;width:100%}
+.f-corps{display:grid;grid-template-columns:.75fr 1.5fr;gap:8mm;margin-top:4px}
+.f-etapes{padding:0;margin:4px 0}
+.f-etapes li{list-style:none;margin:4px 0;font-size:9.5pt;display:flex;gap:6px;align-items:flex-start}
+.f-cb{flex:none;display:inline-block;width:11px;height:11px;border:1.5px solid #1b6b46;border-radius:2px;margin-top:2px;background:#fff}
+.f-cb.ok{background:#1b6b46}
+.f-tuteur{margin-top:8px;border:2px solid #ef86ab;border-radius:8px;padding:6px 10px;display:grid;grid-template-columns:1fr 1fr .8fr;gap:10px;font-size:9pt}
+.f-tuteur b{color:#12492f}
+.f-ligne{border-bottom:1px dotted #777;height:17px}
+.f-capture{max-height:115mm;overflow:hidden;font-size:8.5pt}
+.f-capture button,.f-capture input{pointer-events:none}
 .i-choix{margin:0;padding-left:14px;font-size:8.8pt}
 .i-choix li{margin-bottom:2px}
 .i-choix em{color:#12492f}
@@ -668,7 +679,8 @@ function blocMission(id){
           el('span',{}, e)
         )
       ))),
-    ('speechSynthesis' in window) ? el('button',{class:'btn ecouter', type:'button', onclick:()=>parler(texteLu)}, '🔊 Écouter la mission') : null
+    ('speechSynthesis' in window) ? el('button',{class:'btn ecouter', type:'button', onclick:()=>parler(texteLu)}, '🔊 Écouter la mission') : null,
+    el('button',{class:'btn plein btn-fiche', type:'button', onclick:ev=>ficheMission(id, ev.currentTarget)}, '📄 Ma fiche de fin de mission (PDF)')
   );
 }
 
@@ -2371,6 +2383,65 @@ async function capture3D(){
     r.render(scene, cam);
     const url = r.domElement.toDataURL('image/png'); r.dispose(); return url;
   }catch(e){ return null; }
+}
+async function ficheMission(id, bouton){
+  const m = MISSIONS[id], o = ONGLETS.find(x=>x.id===id), coches = etat.missions[id] || [];
+  const e = etat.enseigne && ENSEIGNES[etat.enseigne], [a,b] = prenoms();
+  const date = new Date().toLocaleDateString('fr-FR');
+  const lignes = n => Array.from({length:n}, ()=>el('div',{class:'f-ligne'}));
+  let resume;
+  if(id==='accueil'){
+    resume = el('section',{}, el('h2',{}, 'Notre binôme'), el('p',{}, `${a} et ${b}`),
+      el('p',{}, 'Pilote à cette séance : ' + (etat.binome.pilote ? b : a)),
+      el('h2',{}, 'Notre mission'), el('p',{}, "Préparer le nouveau magasin de notre enseigne au centre commercial Steel, avec notre tuteur."));
+  } else if(!e){
+    resume = el('p',{}, "Aucune enseigne choisie pour l'instant.");
+  } else if(id==='enseigne'){
+    resume = el('section',{}, el('h2',{}, 'Notre enseigne : '+e.nom), el('p',{}, e.identite),
+      el('h2',{}, 'Ses clients'), el('p',{}, e.cible),
+      el('h2',{}, 'Ce que le nouveau magasin doit respecter'), el('ul',{}, e.exigences.map(x=>el('li',{},x))));
+  } else if(id==='moodboard'){
+    const md = etat.mood, etiq = (t,v) => el('div',{class:'i-etiq'}, el('b',{}, t), v || '—');
+    resume = el('section',{}, el('h2',{}, 'Notre ambiance'),
+      el('div',{class:'i-bande'}, (md.couleurs.length?md.couleurs:['#dfe5e1']).map(c=>el('span',{style:`background:${c}`}))),
+      el('div',{class:'i-produits'}, md.produits.filter(p=>p.img).slice(0,4).map(p=>el('img',{src:p.img, alt:p.nom||'Produit'}))),
+      el('div',{class:'i-grille'}, etiq('Matières', md.matieres.join(', ')), etiq('Lumière', md.lumiere),
+        etiq('Son', [...md.sons, md.sonAutre].filter(Boolean).join(', ')), etiq('Odeur', [...md.odeurs, md.odeurAutre].filter(Boolean).join(', '))),
+      el('p',{class:'i-mots'}, md.mots.filter(Boolean).join(' · ') || '—'),
+      el('p',{class:'i-just'}, md.pqGlobal || 'Justification à écrire.'));
+  } else if(id==='plan'){
+    const P = planEtat();
+    const plan = planClient(null, meublesPlan()); plan.setAttribute('class','plan-impr');
+    const choix = etapesPlan().filter(x=>['place','caisse','chemin'].includes(x.type)).map(x=>{
+      const ch = P.choix[x.id] || {}, sl = x.type==='place' && ch.slot ? emp(ch.slot) : null;
+      const raison = ch.raison!==undefined ? (RAISONS[cleRaison(x)]||[])[ch.raison] : '';
+      return el('li',{}, el('strong',{}, (x.label||'Parcours')+' : '), sl ? sl.nom+'. ' : (x.type==='caisse' && P.caisse ? phraseOrientation(boiteCaisse()).replace("C'est ","")+' ' : 'à faire. '), raison ? el('em',{}, raison) : null);
+    });
+    resume = el('div',{style:'display:grid;grid-template-columns:1.2fr 1fr;gap:6mm'},
+      el('section',{}, el('h2',{}, 'Notre plan'), plan),
+      el('section',{}, el('h2',{}, 'Nos choix d’implantation'), el('ul',{class:'i-choix'}, choix)));
+  } else {
+    const src = document.querySelector('#contenu .page > section');
+    const copie = src ? src.cloneNode(true) : el('p',{}, 'Ouvrez cette page pour créer sa fiche.');
+    copie.querySelectorAll('canvas').forEach(c=>c.remove());
+    resume = el('section',{}, el('h2',{}, 'Notre travail'), el('div',{class:'f-capture'}, copie));
+  }
+  const page = el('div',{class:'page-impr'},
+    el('header',{class:'i-tete'},
+      el('div',{}, el('h1',{}, `${e ? e.pic+' '+e.nom+' — ' : ''}Fiche de fin de mission : ${o.nom}`), el('p',{}, `Binôme : ${a} et ${b} · ${date}`)),
+      el('p',{}, "L'espace qui parle — Terminale CAP EPC")),
+    el('div',{class:'f-corps'},
+      el('div',{class:'i-droite'}, el('h2',{}, 'Les étapes de la mission'),
+        el('ul',{class:'f-etapes'}, m.etapes.map((t,i)=>el('li',{}, el('span',{class:'f-cb'+(coches[i]?' ok':'')}), el('span',{}, t))))),
+      el('div',{class:'i-droite'}, resume)),
+    el('div',{class:'f-tuteur'},
+      el('div',{}, el('b',{}, 'Ce que nous avons réussi'), ...lignes(2)),
+      el('div',{}, el('b',{}, 'Ce que nous devons reprendre'), ...lignes(2)),
+      el('div',{}, el('b',{}, 'Point tuteur'),
+        el('p',{style:'margin:4px 0'}, el('span',{class:'f-cb'}), ' Mission validée'),
+        el('p',{style:'margin:4px 0'}, el('span',{class:'f-cb'}), ' À reprendre'),
+        el('p',{style:'margin:4px 0'}, 'Signature :'))));
+  await telechargerPDF(page, nomFichier(`mission_${o.nom}_${a}_${b}`), bouton);
 }
 async function imprimerOral(){
   const bouton = document.getElementById('btnImprimer');
